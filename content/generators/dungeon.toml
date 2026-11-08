@@ -1,0 +1,45 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: multi-line template; the hazard sits alone on its labelled line (D-76); rooms are a bulleted list.
+name = "Dungeon"
+category = "Sites"
+tags = ["dungeon", "site"]
+description = "A dungeon: what it is, who lives there, a possible hazard, treasure and several rooms."
+template = "Dungeon: {type}, {origin}, {state}.\nEntrance: {entrance}\nInhabitants: {inhabitants}\nHazard: {hazard}\nTreasure:\n{treasure}\nRooms:\n{rooms}"
+
+[[slots]]
+key = "type"
+table = "dungeon_type"
+
+[[slots]]
+key = "origin"
+table = "dungeon_origin"
+
+[[slots]]
+key = "state"
+table = "dungeon_state"
+
+[[slots]]
+key = "entrance"
+table = "dungeon_entrance"
+
+[[slots]]
+key = "inhabitants"
+table = "dungeon_inhabitant"
+count = 2
+distinct = true
+join = " and "
+
+[[slots]]
+key = "hazard"
+generator = "trap"
+chance = 60
+
+[[slots]]
+key = "treasure"
+generator = "treasure"
+
+[[slots]]
+key = "rooms"
+generator = "dungeon_room"
+count = "1d4+3"
+list = true

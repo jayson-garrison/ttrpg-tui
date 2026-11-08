@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun phrase, lowercase, no commas (two are joined).
+name = "Dungeon inhabitant"
+category = "Sites"
+tags = ["dungeon", "inhabitant"]
+description = "Who or what lives there."
+items = [
+  "a clan of scavengers",
+  "restless skeletons",
+  "giant rats",
+  "a hermit scholar",
+  "bandits hiding out",
+  "a nest of cave spiders",
+  "a stubborn caretaker",
+  "mushroom farmers",
+  "something that watches",
+  "a troubled spirit",
+  "rival treasure hunters",
+  "bats by the thousand",
+]

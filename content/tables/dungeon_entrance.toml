@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun phrase with article, lowercase.
+name = "Dungeon entrance"
+category = "Sites"
+tags = ["dungeon", "entrance"]
+description = "How you get in."
+items = [
+  "a hidden door behind a waterfall",
+  "a wide stair going down",
+  "a hole under a fallen tree",
+  "a gate chained shut",
+  "a collapsed archway",
+  "a narrow cleft in a hillside",
+  "a well with no water",
+  "a trapdoor in a ruined chapel",
+  "a cart track into a mine mouth",
+  "a door set into a hillside",
+  "a tunnel mouth half covered by brambles",
+  "a boat landing under a cliff",
+]

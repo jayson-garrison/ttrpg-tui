@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun phrase, lowercase.
+name = "Room contents"
+category = "Sites"
+tags = ["room", "contents"]
+description = "What is in the room."
+items = [
+  "nothing of value",
+  "a sleeping creature",
+  "an old campsite",
+  "a locked chest",
+  "signs of a recent fight",
+  "a hidden alcove",
+  "a pile of broken tools",
+  "a puzzle of sliding blocks",
+  "a patient guardian",
+  "a cache of supplies",
+  "a scholar's abandoned notes",
+  "a lonely candle still burning",
+]

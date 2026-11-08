@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun phrase with article, lowercase.
+name = "Dungeon type"
+category = "Sites"
+tags = ["dungeon", "type"]
+description = "What kind of place it is."
+items = [
+  "a ruined keep",
+  "a flooded mine",
+  "a sunken crypt",
+  "a forgotten cellar network",
+  "an abandoned monastery",
+  "a cave system",
+  "a collapsed tower",
+  "a buried vault",
+  "a forsaken waystation",
+  "a tunnel under a hill",
+  "a hollowed-out cliff",
+  "a drowned temple",
+]

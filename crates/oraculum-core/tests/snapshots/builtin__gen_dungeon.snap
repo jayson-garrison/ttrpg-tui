@@ -1,0 +1,49 @@
+---
+source: crates/oraculum-core/tests/builtin.rs
+expression: body
+---
+seed 1: Dungeon: a forsaken waystation, built by a long-vanished order, slowly collapsing.
+Entrance: a trapdoor in a ruined chapel
+Inhabitants: a stubborn caretaker and giant rats
+Hazard: Triggered by any sound above a whisper: a hidden spring douses every light in the room. Warning sign: unnaturally quiet air. Danger: a nuisance.
+Treasure:
+Coins: 21 coins
+Valuables: a small gold idol and an embroidered banner
+Rooms:
+- Room (L-shaped, quiet and watchful): a collapsed ceiling corner; contents: a locked chest; exits: a spiral stair going down, a barred gate.
+- Room (split-level, rowdy and sprawling): a shallow pool; contents: a lonely candle still burning; exits: a narrow crack in the wall, a round hatch, a stuck wooden door.
+- Room (wide, smoky and warm): a rusted chain hanging from above; contents: a scholar's abandoned notes; exits: a spiral stair going down.
+- Room (long and low, heavy with incense): a sooty fireplace; contents: a lonely candle still burning; exits: a low archway.
+- Room (sunken, dim and cramped): a collapsed ceiling corner; contents: an old campsite; exits: a rope ladder going up.
+seed 2: Dungeon: a forsaken waystation, made in a single night, mostly intact.
+Entrance: a hidden door behind a waterfall
+Inhabitants: a stubborn caretaker and a clan of scavengers
+Hazard: Triggered by a lit flame: a pressure plate releases a swarm of angry insects. Warning sign: unnaturally quiet air. Danger: dangerous.
+Treasure:
+Coins: 17 coins
+Valuables: a gilded book of songs and a bottle of rare perfume
+Item: a brass key
+Material: oak. Quality: cracked but sound.
+Power: it makes water safe to drink.
+History: traded for a debt.
+Rooms:
+- Room (long and low, tense with whispers): a long stone table; contents: a locked chest; exits: a curtained doorway, a spiral stair going down, a low archway.
+- Room (triangular, smoky and warm): a cracked fountain; contents: a cache of supplies; exits: a curtained doorway.
+- Room (L-shaped, sticky underfoot): a cracked fountain; contents: a sleeping creature; exits: an iron-bound door.
+- Room (narrow, cold and echoing): a rusted chain hanging from above; contents: a pile of broken tools; exits: a barred gate.
+- Room (vaulted, eerily still): a dusty throne; contents: an old campsite; exits: a collapsed passage half cleared, a curtained doorway, a spiral stair going down.
+seed 3: Dungeon: a buried vault, left behind by a flood, rumored empty.
+Entrance: a tunnel mouth half covered by brambles
+Inhabitants: bats by the thousand and a stubborn caretaker
+Treasure:
+Coins: 8 coins
+Valuables: a string of river pearls
+Item: a walking staff
+Material: blackened iron. Quality: covered in tiny marks.
+Power: it sticks locks shut for everyone else.
+History: won in a card game.
+Rooms:
+- Room (L-shaped, smoky and warm): a cracked fountain; contents: a scholar's abandoned notes; exits: a sloping tunnel, a curtained doorway, a narrow crack in the wall.
+- Room (irregular, cozy and cluttered): a collapsed ceiling corner; contents: a lonely candle still burning; exits: a sloping tunnel, a curtained doorway.
+- Room (long and low, cold and echoing): a sooty fireplace; contents: a cache of supplies; exits: a round hatch, a rope ladder going up, an iron-bound door.
+- Room (irregular, dim and cramped): a sooty fireplace; contents: a pile of broken tools; exits: a curtained doorway, a rope ladder going up, an iron-bound door.

@@ -1,0 +1,29 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: single-line template (rooms are bulleted by the dungeon).
+name = "Dungeon room"
+category = "Sites"
+tags = ["room", "dungeon"]
+description = "One room: shape, mood, feature, contents and exits."
+template = "Room ({shape}, {atmosphere}): {feature}; contents: {contents}; exits: {exits}."
+
+[[slots]]
+key = "shape"
+table = "room_shape"
+
+[[slots]]
+key = "atmosphere"
+table = "atmosphere"
+
+[[slots]]
+key = "feature"
+table = "room_feature"
+
+[[slots]]
+key = "contents"
+table = "room_contents"
+
+[[slots]]
+key = "exits"
+table = "room_exit"
+count = "1d3"
+distinct = true

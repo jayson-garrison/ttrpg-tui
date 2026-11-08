@@ -1,0 +1,7 @@
+---
+source: crates/oraculum-core/tests/builtin.rs
+expression: body
+---
+seed 1: Room (split-level, heavy with incense): scattered bones; contents: a puzzle of sliding blocks; exits: a spiral stair going down.
+seed 2: Room (split-level, sweet with spice): a long stone table; contents: nothing of value; exits: a stuck wooden door.
+seed 3: Room (sunken, noisy with music): a dusty throne; contents: a scholar's abandoned notes; exits: a curtained doorway, an iron-bound door, a stuck wooden door.

@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun phrase with article, lowercase, no commas (up to three are joined).
+name = "Room exit"
+category = "Sites"
+tags = ["room", "exit"]
+description = "A way out."
+items = [
+  "a stuck wooden door",
+  "a low archway",
+  "a spiral stair going down",
+  "a narrow crack in the wall",
+  "an iron-bound door",
+  "a rope ladder going up",
+  "a curtained doorway",
+  "a sloping tunnel",
+  "a collapsed passage half cleared",
+  "a trapdoor under a rug",
+  "a barred gate",
+  "a round hatch",
+]
