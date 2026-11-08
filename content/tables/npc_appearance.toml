@@ -1,0 +1,24 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: fragment, lowercase; adjective phrase or 'a/an' noun phrase.
+name = "NPC appearance"
+category = "Characters"
+tags = ["npc", "look"]
+description = "One memorable look."
+items = [
+  "weathered and sun-darkened",
+  "tall with a stooped back",
+  "small and quick-eyed",
+  "broad-shouldered and soft-spoken",
+  "wiry with ink-stained fingers",
+  "round-faced and ruddy",
+  "scarred across one hand",
+  "dressed too well for the road",
+  "patched from collar to boot",
+  "missing two fingers",
+  "silver streaks in a dark braid",
+  "a hat pulled low",
+  "unusually clean for the trade",
+  "smelling of smoke and herbs",
+  "a limp that comes and goes",
+  "bright mismatched eyes",
+]

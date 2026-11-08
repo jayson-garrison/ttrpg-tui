@@ -1,0 +1,22 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: verb phrase starting with 'to' omitted: read after 'Wants to'.
+name = "NPC motivation"
+category = "Characters"
+tags = ["npc", "goal"]
+description = "What a character is after."
+items = [
+  "repay an old debt",
+  "see a sibling again",
+  "buy a plot of land",
+  "be left alone",
+  "prove a rival wrong",
+  "find a missing apprentice",
+  "earn a respected name",
+  "escape a dull town",
+  "protect a failing shop",
+  "collect a long-owed favour",
+  "learn a closely guarded craft",
+  "make one last good trade",
+  "outlive a feud",
+  "finish an unfinished work",
+]

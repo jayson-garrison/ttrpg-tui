@@ -14,6 +14,12 @@ File stem == id. Every file is listed in `crates/oraculum-core/src/builtin.rs` (
 6. `category` is one of Characters, Creatures, Places, Sites, Adventure, Items, Organizations, Oracle. `tags`: 1-3 lowercase words.
 7. Every table is used by at least one generator.
 
+## Optional slots (chance below 100)
+
+An absent slot renders as nothing, and templates have no conditional text. So an optional slot goes last,
+before the closing punctuation, and its entries carry their own separator, e.g. `npc_secret` entries start
+with `; secretly ...` and the `npc` template ends `{motivation}{secret}.`. Declare this in the table's `Form:`.
+
 ## Tests and snapshots
 
 `cargo test -p oraculum-core --test builtin`. Generator output for seeds 1..3 is pinned in `crates/oraculum-core/tests/snapshots/`;

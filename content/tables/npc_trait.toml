@@ -1,0 +1,28 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: adjective phrase, lowercase, no commas (two are joined).
+name = "NPC trait"
+category = "Characters"
+tags = ["npc", "trait"]
+description = "A trait of manner. Two are rolled and joined."
+items = [
+  "quick to laugh",
+  "slow to forgive",
+  "suspicious of strangers",
+  "endlessly curious",
+  "generous to a fault",
+  "careful with every coin",
+  "fond of old songs",
+  "easily bored",
+  "fiercely loyal",
+  "a poor liar",
+  "prone to boasting",
+  "patient to the point of stubbornness",
+  "nervous around animals",
+  "blunt without meaning harm",
+  "always hungry",
+  "quietly observant",
+  "overly polite",
+  "restless at night",
+  "proud of small things",
+  "unwilling to ask for help",
+]
