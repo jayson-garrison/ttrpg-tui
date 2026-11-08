@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: clause, lowercase.
+name = "Wild feature"
+category = "Places"
+tags = ["wilderness", "feature"]
+description = "A notable fact about the area."
+items = [
+  "tracks of many travelers cross here",
+  "wild herbs grow thick",
+  "the ground is soft and springy",
+  "a cold spring bubbles up",
+  "the wind never stops",
+  "fog gathers every dawn",
+  "berries and nuts are plentiful",
+  "the soil is strangely red",
+  "birds nest in great numbers",
+  "old terraces climb the slope",
+  "a faint path leads on",
+  "grass grows in odd rings",
+]

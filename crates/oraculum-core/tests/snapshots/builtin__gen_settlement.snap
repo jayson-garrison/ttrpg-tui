@@ -1,0 +1,16 @@
+---
+source: crates/oraculum-core/tests/builtin.rs
+expression: body
+---
+seed 1: Iron Harbor, a market town, run by the largest landowner.
+Notable for a ruined watchtower; trades in clay pots.
+Trouble: the bridge needs repair and no one will pay.
+Leader: Ebrin Pennywhistle, well digger (very old): unusually clean for the trade. Seems careful with every coin and suspicious of strangers. Wants to find a missing apprentice.
+seed 2: Blue Meadow, a busy village, run by a council of elders.
+Notable for a ruined watchtower; trades in wool and cloth.
+Trouble: a feud between two families.
+Leader: Dell Yewdale, salt merchant (very old): tall with a stooped back. Seems nervous around animals and patient to the point of stubbornness. Wants to learn a closely guarded craft.
+seed 3: Low Fen, a fortified crossroads, led by a respected midwife.
+Notable for a lighthouse that never lights; trades in dried fruit.
+Trouble: the bridge needs repair and no one will pay.
+Leader: Sorrel Ashgrove, courier (barely adult): wiry with ink-stained fingers. Seems careful with every coin and overly polite. Wants to find a missing apprentice; secretly watches the others for someone else.

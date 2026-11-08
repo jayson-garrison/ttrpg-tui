@@ -1,0 +1,39 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: multi-line template; the leader line is a nested generator.
+name = "Settlement"
+category = "Places"
+tags = ["settlement", "place"]
+description = "A named settlement with its size, rulers, trade, trouble and leader."
+template = "{adjective} {noun}, {size}, {government}.\nNotable for {feature}; trades in {trade}.\nTrouble: {problem}.\nLeader: {leader}"
+
+[[slots]]
+key = "adjective"
+table = "place_adjective"
+
+[[slots]]
+key = "noun"
+table = "place_noun"
+
+[[slots]]
+key = "size"
+table = "settlement_size"
+
+[[slots]]
+key = "government"
+table = "settlement_government"
+
+[[slots]]
+key = "feature"
+table = "settlement_feature"
+
+[[slots]]
+key = "trade"
+table = "settlement_trade"
+
+[[slots]]
+key = "problem"
+table = "settlement_problem"
+
+[[slots]]
+key = "leader"
+generator = "npc"

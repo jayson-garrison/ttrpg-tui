@@ -8,6 +8,10 @@ use crate::catalog::Source;
 /// `(file stem, file text)` for each built-in table.
 pub const TABLES: &[(&str, &str)] = &[
     (
+        "atmosphere",
+        include_str!("../../../content/tables/atmosphere.toml"),
+    ),
+    (
         "creature_ability",
         include_str!("../../../content/tables/creature_ability.toml"),
     ),
@@ -76,6 +80,14 @@ pub const TABLES: &[(&str, &str)] = &[
         include_str!("../../../content/tables/npc_trait.toml"),
     ),
     (
+        "place_adjective",
+        include_str!("../../../content/tables/place_adjective.toml"),
+    ),
+    (
+        "place_noun",
+        include_str!("../../../content/tables/place_noun.toml"),
+    ),
+    (
         "rumor_claim",
         include_str!("../../../content/tables/rumor_claim.toml"),
     ),
@@ -86,6 +98,38 @@ pub const TABLES: &[(&str, &str)] = &[
     (
         "rumor_veracity",
         include_str!("../../../content/tables/rumor_veracity.toml"),
+    ),
+    (
+        "settlement_feature",
+        include_str!("../../../content/tables/settlement_feature.toml"),
+    ),
+    (
+        "settlement_government",
+        include_str!("../../../content/tables/settlement_government.toml"),
+    ),
+    (
+        "settlement_problem",
+        include_str!("../../../content/tables/settlement_problem.toml"),
+    ),
+    (
+        "settlement_size",
+        include_str!("../../../content/tables/settlement_size.toml"),
+    ),
+    (
+        "settlement_trade",
+        include_str!("../../../content/tables/settlement_trade.toml"),
+    ),
+    (
+        "tavern_clientele",
+        include_str!("../../../content/tables/tavern_clientele.toml"),
+    ),
+    (
+        "tavern_specialty",
+        include_str!("../../../content/tables/tavern_specialty.toml"),
+    ),
+    (
+        "terrain",
+        include_str!("../../../content/tables/terrain.toml"),
     ),
     (
         "trap_effect",
@@ -107,6 +151,22 @@ pub const TABLES: &[(&str, &str)] = &[
         "trap_trigger",
         include_str!("../../../content/tables/trap_trigger.toml"),
     ),
+    (
+        "wild_danger",
+        include_str!("../../../content/tables/wild_danger.toml"),
+    ),
+    (
+        "wild_feature",
+        include_str!("../../../content/tables/wild_feature.toml"),
+    ),
+    (
+        "wild_landmark",
+        include_str!("../../../content/tables/wild_landmark.toml"),
+    ),
+    (
+        "wild_resident",
+        include_str!("../../../content/tables/wild_resident.toml"),
+    ),
 ];
 
 /// `(file stem, file text)` for each built-in generator.
@@ -125,8 +185,20 @@ pub const GENERATORS: &[(&str, &str)] = &[
         include_str!("../../../content/generators/rumor.toml"),
     ),
     (
+        "settlement",
+        include_str!("../../../content/generators/settlement.toml"),
+    ),
+    (
+        "tavern",
+        include_str!("../../../content/generators/tavern.toml"),
+    ),
+    (
         "trap",
         include_str!("../../../content/generators/trap.toml"),
+    ),
+    (
+        "wilderness_location",
+        include_str!("../../../content/generators/wilderness_location.toml"),
     ),
 ];
 

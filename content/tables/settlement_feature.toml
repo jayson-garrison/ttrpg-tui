@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun phrase with article, lowercase; reads after 'Notable for'.
+name = "Settlement feature"
+category = "Places"
+tags = ["settlement", "landmark"]
+description = "Something people remember about it."
+items = [
+  "a leaning clock tower",
+  "a huge ancient tree",
+  "a stone bridge older than the town",
+  "a famous market day",
+  "an unusually large well",
+  "a ring of standing stones",
+  "a ruined watchtower",
+  "a colorful painted gate",
+  "a hot spring",
+  "a waterwheel the size of a house",
+  "an enormous hay barn",
+  "a lighthouse that never lights",
+]

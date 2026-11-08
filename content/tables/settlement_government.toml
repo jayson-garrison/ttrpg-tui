@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: participle phrase, lowercase; reads after 'a town,'.
+name = "Settlement government"
+category = "Places"
+tags = ["settlement", "rule"]
+description = "Who runs the place."
+items = [
+  "run by a council of elders",
+  "ruled by a hereditary steward",
+  "led by an elected reeve",
+  "governed by the guild masters",
+  "overseen by a distant lord's bailiff",
+  "held together by tradition alone",
+  "managed by a temple warden",
+  "run by the largest landowner",
+  "ruled by a rotating watch captain",
+  "governed by a merchant league",
+  "led by a respected midwife",
+  "held by a fading noble family",
+]

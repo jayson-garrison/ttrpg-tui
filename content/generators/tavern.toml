@@ -1,0 +1,36 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: multi-line template; the rumor sits alone on its labelled last line (D-76).
+name = "Tavern"
+category = "Places"
+tags = ["tavern", "place"]
+description = "A tavern with a keeper, mood, specialty, crowd and sometimes a rumor."
+template = "The {adjective} {noun}\nKeeper: {proprietor}\nAtmosphere: {atmosphere}; specialty: {specialty}.\nClientele: {clientele}.\nRumor: {rumor}"
+
+[[slots]]
+key = "adjective"
+table = "place_adjective"
+
+[[slots]]
+key = "noun"
+table = "place_noun"
+
+[[slots]]
+key = "proprietor"
+generator = "npc"
+
+[[slots]]
+key = "atmosphere"
+table = "atmosphere"
+
+[[slots]]
+key = "specialty"
+table = "tavern_specialty"
+
+[[slots]]
+key = "clientele"
+table = "tavern_clientele"
+
+[[slots]]
+key = "rumor"
+generator = "rumor"
+chance = 60

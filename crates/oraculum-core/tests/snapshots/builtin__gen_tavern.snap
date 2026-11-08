@@ -1,0 +1,16 @@
+---
+source: crates/oraculum-core/tests/builtin.rs
+expression: body
+---
+seed 1: The Iron Harbor
+Keeper: Yarrow Valewood, night watch sergeant (young and restless): weathered and sun-darkened. Seems generous to a fault and fiercely loyal. Wants to find a missing apprentice; secretly owes money to a smuggler.
+Atmosphere: bright and cheerful; specialty: a thick mulled cider.
+Clientele: quiet scholars and scribes.
+seed 2: The Blue Meadow
+Keeper: Fenwick Knotley, tax collector (barely adult): scarred across one hand. Seems fiercely loyal and fond of old songs. Wants to make one last good trade; secretly knows the way into the old cellars.
+Atmosphere: noisy with music; specialty: house-baked seed loaves.
+Clientele: off-duty watchmen.
+seed 3: The Low Fen
+Keeper: Jessum Fernhollow, dyer (graying at the temples): wiry with ink-stained fingers. Seems fiercely loyal and overly polite. Wants to buy a plot of land.
+Atmosphere: noisy with music; specialty: smoked eel on bread.
+Clientele: mostly local farmers.

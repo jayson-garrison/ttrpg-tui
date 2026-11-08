@@ -1,0 +1,13 @@
+---
+source: crates/oraculum-core/tests/builtin.rs
+expression: body
+---
+seed 1: Terrain: rocky hills. Landmark: a lone split boulder.
+Feature: a cold spring bubbles up. Danger: poisonous standing water.
+Resident: a patrol of tired soldiers
+seed 2: Terrain: broken cliff country. Landmark: a rusted iron gate standing alone.
+Feature: the ground is soft and springy. Danger: sudden flash floods.
+Resident: a lone hermit with strong opinions
+seed 3: Terrain: river valley. Landmark: an abandoned shepherd's hut.
+Feature: the soil is strangely red. Danger: thorn thickets that trap the unwary.
+Resident: a pair of runaways
