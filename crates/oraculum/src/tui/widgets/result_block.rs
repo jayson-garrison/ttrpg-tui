@@ -2,34 +2,49 @@
 //! underlined, so the highlight never changes the words (D-79).
 
 use oraculum_core::generator::GeneratorResult;
+use ratatui::style::Style;
 use ratatui::text::{Line, Span};
 
 use crate::tui::theme;
 
 /// One `Line` per line of the rendered text. Segment text may span lines.
 pub fn lines(result: &GeneratorResult) -> Vec<Line<'static>> {
+    lines_focused(result, None)
+}
+
+/// As `lines`, with the text of slot `focus` in reverse video (slot picker).
+pub fn lines_focused(result: &GeneratorResult, focus: Option<usize>) -> Vec<Line<'static>> {
     let mut out: Vec<Vec<Span<'static>>> = vec![Vec::new()];
     for seg in &result.segments {
         let mut parts = seg.text.split('\n');
         if let Some(first) = parts.next() {
-            push(&mut out, first, seg.slot.is_some());
+            push(&mut out, first, style_of(seg.slot, focus));
         }
         for part in parts {
             out.push(Vec::new());
-            push(&mut out, part, seg.slot.is_some());
+            push(&mut out, part, style_of(seg.slot, focus));
         }
     }
     out.into_iter().map(Line::from).collect()
 }
 
-fn push(out: &mut [Vec<Span<'static>>], text: &str, slot: bool) {
+fn style_of(slot: Option<usize>, focus: Option<usize>) -> Option<Style> {
+    slot.map(|i| {
+        if Some(i) == focus {
+            theme::active_tab()
+        } else {
+            theme::slot()
+        }
+    })
+}
+
+fn push(out: &mut [Vec<Span<'static>>], text: &str, style: Option<Style>) {
     if text.is_empty() {
         return;
     }
-    let span = if slot {
-        Span::styled(text.to_string(), theme::slot())
-    } else {
-        Span::raw(text.to_string())
+    let span = match style {
+        Some(style) => Span::styled(text.to_string(), style),
+        None => Span::raw(text.to_string()),
     };
     if let Some(line) = out.last_mut() {
         line.push(span);
@@ -66,6 +81,21 @@ mod tests {
             .map(|s| s.content.as_ref())
             .collect();
         assert_eq!(styled, ["green", "gamma", "4"]);
+    }
+
+    #[test]
+    fn the_focused_slot_is_reversed_and_the_rest_keep_the_slot_style() {
+        let g = pair();
+        let lines = lines_focused(&g, Some(1));
+        let focused: Vec<&str> = lines[0]
+            .spans
+            .iter()
+            .filter(|s| s.style == theme::active_tab())
+            .map(|s| s.content.as_ref())
+            .collect();
+        assert_eq!(focused, ["gamma"]);
+        let plain: String = lines[0].spans.iter().map(|s| s.content.as_ref()).collect();
+        assert_eq!(plain, g.text);
     }
 
     #[test]

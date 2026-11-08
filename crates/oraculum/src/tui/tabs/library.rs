@@ -1,25 +1,28 @@
 //! Library tab (T7_T9_PLAN §3.4, T9.1): browse, filter, categories, detail and
-//! entries views, roll and repeat. Slots and warnings arrive with T9.2.
+//! entries views, roll and repeat (T9.1); slot picker and loader warnings (T9.2).
 
 use std::cell::Cell;
 use std::rc::Rc;
 
 use crossterm::event::{KeyCode, KeyEvent};
-use oraculum_core::catalog::{Catalog, Filter, ItemKind, ItemSummary};
+use oraculum_core::catalog::{Catalog, Filter, ItemKind, ItemSummary, LoadWarning, WarningKind};
 use oraculum_core::engine::RollResult;
-use oraculum_core::generator::SlotSource;
+use oraculum_core::generator::{GeneratorResult, SlotResult, SlotSource};
 use oraculum_core::table::TableForm;
 use ratatui::layout::{Constraint, Layout, Rect};
+use ratatui::style::Style;
 use ratatui::text::{Line, Span};
 use ratatui::widgets::{Block, Borders, Paragraph, Wrap};
 use ratatui::Frame;
 
+use crate::cli::output::format_warning;
 use crate::tui::action::{Action, LibraryTarget, RollRequest, Tab, TabEvent, TabId, Toast};
 use crate::tui::input::LineInput;
 use crate::tui::theme;
 use crate::tui::widgets::{clip, result_block};
 
 const MIN_LIST_WIDTH: u16 = 22;
+const WARNING_ROWS: u16 = 4;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 enum Row {
@@ -42,6 +45,14 @@ struct Last {
 
 pub struct LibraryTab {
     catalog: Rc<Catalog>,
+    warnings: Vec<LoadWarning>,
+    warnings_open: bool,
+    warnings_scroll: usize,
+    /// Slot picker over `last`'s generator result (D-78).
+    slot_mode: bool,
+    slot_selected: usize,
+    /// Set when this tab asked for a slot re-roll, so the answer keeps the picker.
+    rerolling: bool,
     filtering: bool,
     filter: LineInput,
     category: Option<String>,
@@ -57,9 +68,15 @@ pub struct LibraryTab {
 }
 
 impl LibraryTab {
-    pub fn new(catalog: Rc<Catalog>) -> LibraryTab {
+    pub fn new(catalog: Rc<Catalog>, warnings: Vec<LoadWarning>) -> LibraryTab {
         let mut tab = LibraryTab {
             catalog,
+            warnings,
+            warnings_open: false,
+            warnings_scroll: 0,
+            slot_mode: false,
+            slot_selected: 0,
+            rerolling: false,
             filtering: false,
             filter: LineInput::new(),
             category: None,
@@ -202,6 +219,7 @@ impl LibraryTab {
     }
 
     fn focus(&mut self, target: &LibraryTarget) {
+        self.slot_mode = false;
         self.filter.clear();
         match target {
             LibraryTarget::Item { kind, id } => {
@@ -224,6 +242,69 @@ impl LibraryTab {
             }
         }
         self.reset_view();
+    }
+
+    fn generator_result(&self) -> Option<&GeneratorResult> {
+        match self.last.as_ref().map(|l| &l.result) {
+            Some(RollResult::Generator(g)) => Some(g),
+            _ => None,
+        }
+    }
+
+    fn enter_slot_mode(&mut self) -> Action {
+        match self.generator_result() {
+            Some(g) if !g.slots.is_empty() => {
+                self.slot_selected = self.slot_selected.min(g.slots.len() - 1);
+                self.slot_mode = true;
+                Action::None
+            }
+            Some(_) => Action::Toast(Toast::info("this generator has no slots")),
+            None => Action::Toast(Toast::info("roll a generator first")),
+        }
+    }
+
+    fn slot_key(&mut self, key: KeyEvent) -> Action {
+        let count = self.generator_result().map_or(0, |g| g.slots.len());
+        match key.code {
+            KeyCode::Esc => self.slot_mode = false,
+            KeyCode::Up => self.slot_selected = self.slot_selected.saturating_sub(1),
+            KeyCode::Down => {
+                self.slot_selected = (self.slot_selected + 1).min(count.saturating_sub(1));
+            }
+            KeyCode::Enter => {
+                if let Some(g) = self
+                    .generator_result()
+                    .filter(|g| self.slot_selected < g.slots.len())
+                {
+                    let request = RollRequest::RerollSlot {
+                        previous: Box::new(g.clone()),
+                        slot: self.slot_selected,
+                    };
+                    self.rerolling = true;
+                    return Action::Roll(request);
+                }
+            }
+            _ => {}
+        }
+        Action::None
+    }
+
+    fn toggle_warnings(&mut self) -> Action {
+        self.warnings_open = !self.warnings_open;
+        self.warnings_scroll = 0;
+        Action::None
+    }
+
+    fn scroll_warnings_action(&mut self, delta: isize) -> Action {
+        self.scroll_warnings(delta);
+        Action::None
+    }
+
+    fn scroll_warnings(&mut self, delta: isize) {
+        self.warnings_scroll = self
+            .warnings_scroll
+            .saturating_add_signed(delta)
+            .min(self.warnings.len().saturating_sub(1));
     }
 
     fn filter_key(&mut self, key: KeyEvent) -> Action {
@@ -350,6 +431,41 @@ impl LibraryTab {
         }
     }
 
+    fn slot_lines(&self) -> Vec<Line<'static>> {
+        let Some(g) = self.generator_result() else {
+            return Vec::new();
+        };
+        let mut lines = vec![
+            Line::styled(format!("Re-roll a slot of {}", g.id), theme::bold()),
+            Line::from(""),
+        ];
+        lines.extend(result_block::lines_focused(g, Some(self.slot_selected)));
+        lines.push(Line::from(""));
+        for (i, slot) in g.slots.iter().enumerate() {
+            let text = slot_row(slot);
+            lines.push(if i == self.slot_selected {
+                Line::styled(format!("> {text}"), theme::active_tab())
+            } else {
+                Line::from(format!("  {text}"))
+            });
+        }
+        lines.push(Line::styled("Enter re-roll  Esc back", theme::dim()));
+        lines
+    }
+
+    fn warning_panel(&self, width: usize) -> Paragraph<'static> {
+        let lines: Vec<Line> = if self.warnings.is_empty() {
+            vec![Line::styled("No loader warnings.", theme::dim())]
+        } else {
+            self.warnings
+                .iter()
+                .skip(self.warnings_scroll)
+                .map(|w| Line::styled(clip(&format_warning(w), width), warning_style(w.kind)))
+                .collect()
+        };
+        Paragraph::new(lines).block(Block::default().borders(Borders::TOP).title("Warnings"))
+    }
+
     fn entry_lines(&self) -> Vec<Line<'static>> {
         let Some(table) = self.current().and_then(|i| self.catalog.table(&i.id)) else {
             return Vec::new();
@@ -370,6 +486,24 @@ impl LibraryTab {
     }
 }
 
+/// `key: value`, with `(absent)` for a slot that did not appear.
+fn slot_row(slot: &SlotResult) -> String {
+    let value = if slot.present {
+        slot.values.join(", ")
+    } else {
+        "(absent)".to_string()
+    };
+    format!("{}: {value}", slot.key)
+}
+
+/// A replaced built-in is information, not a problem (D-54).
+fn warning_style(kind: WarningKind) -> Style {
+    match kind {
+        WarningKind::Replaced => theme::dim(),
+        _ => theme::warning(),
+    }
+}
+
 impl Tab for LibraryTab {
     fn id(&self) -> TabId {
         TabId::Library
@@ -383,11 +517,24 @@ impl Tab for LibraryTab {
         if self.filtering {
             return self.filter_key(key);
         }
+        if self.slot_mode {
+            return self.slot_key(key);
+        }
+        if self.warnings_open {
+            match key.code {
+                KeyCode::Up => return self.scroll_warnings_action(-1),
+                KeyCode::Down => return self.scroll_warnings_action(1),
+                KeyCode::Esc => return self.toggle_warnings(),
+                _ => {}
+            }
+        }
         let in_entries = self.view == View::Entries;
         match key.code {
             KeyCode::Char('/') => self.filtering = true,
             KeyCode::Char('c') => self.cycle_category(),
             KeyCode::Char('v') => return self.toggle_entries(),
+            KeyCode::Char('s') => return self.enter_slot_mode(),
+            KeyCode::Char('w') => return self.toggle_warnings(),
             KeyCode::Esc => self.clear_filters(),
             KeyCode::Up => self.move_by(-1),
             KeyCode::Down => self.move_by(1),
@@ -414,9 +561,21 @@ impl Tab for LibraryTab {
     }
 
     fn render(&self, frame: &mut Frame, area: Rect) {
-        let outer = Block::default().borders(Borders::ALL).title("Library");
+        let title = format!("Library  warnings {}", self.warnings.len());
+        let outer = Block::default().borders(Borders::ALL).title(title);
         let inner = outer.inner(area);
         frame.render_widget(outer, area);
+        let (inner, panel) = if self.warnings_open && inner.height > WARNING_ROWS + 3 {
+            let [top, bottom] =
+                Layout::vertical([Constraint::Min(1), Constraint::Length(WARNING_ROWS)])
+                    .areas(inner);
+            (top, Some(bottom))
+        } else {
+            (inner, None)
+        };
+        if let Some(bottom) = panel {
+            frame.render_widget(self.warning_panel(usize::from(bottom.width)), bottom);
+        }
         let list_w = (inner.width * 2 / 5).max(MIN_LIST_WIDTH).min(inner.width);
         let [left, right] =
             Layout::horizontal([Constraint::Length(list_w), Constraint::Min(0)]).areas(inner);
@@ -429,8 +588,10 @@ impl Tab for LibraryTab {
         );
         frame.render_widget(Paragraph::new(self.filter_line()), filter);
 
-        let showing_entries = self.view == View::Entries;
-        let lines = if showing_entries {
+        let showing_entries = self.view == View::Entries && !self.slot_mode;
+        let lines = if self.slot_mode {
+            self.slot_lines()
+        } else if showing_entries {
             self.entry_lines()
         } else {
             self.detail_lines()
@@ -461,6 +622,10 @@ impl Tab for LibraryTab {
                     RollResult::Generator(g) => (ItemKind::Generator, g.id.clone()),
                     _ => return,
                 };
+                if !std::mem::take(&mut self.rerolling) {
+                    self.slot_selected = 0;
+                    self.slot_mode = false;
+                }
                 self.last = Some(Last {
                     kind,
                     id,
@@ -479,6 +644,8 @@ impl Tab for LibraryTab {
             ("Enter", "roll"),
             ("r", "repeat"),
             ("v", "entries"),
+            ("s", "slot"),
+            ("w", "warnings"),
         ]
     }
 }
@@ -488,7 +655,7 @@ mod tests {
     use super::*;
     use crate::tui::testkit::{engine, fixture_catalog};
     use crossterm::event::KeyModifiers;
-    use oraculum_core::catalog::Source;
+    use oraculum_core::catalog::{LoadWarning, Source, WarningKind};
     use ratatui::backend::TestBackend;
     use ratatui::Terminal;
 
@@ -501,7 +668,7 @@ mod tests {
     }
 
     fn tab() -> LibraryTab {
-        LibraryTab::new(Rc::new(fixture_catalog().0))
+        LibraryTab::new(Rc::new(fixture_catalog().0), fixture_catalog().1)
     }
 
     fn type_str(tab: &mut LibraryTab, s: &str) {
@@ -739,7 +906,7 @@ mod tests {
             "name = \"Mine\"\ncategory = \"Mine\"\nitems = [\"a\", \"b\"]",
         )];
         let (catalog, _) = Catalog::build(&[], &user);
-        let t = LibraryTab::new(Rc::new(catalog));
+        let t = LibraryTab::new(Rc::new(catalog), vec![]);
         let s = screen(&t, 80, 20);
         assert!(s.contains("T Mine"), "{s}");
     }
@@ -747,7 +914,7 @@ mod tests {
     #[test]
     fn an_empty_library_renders_and_ignores_keys() {
         let (catalog, _) = Catalog::build(&[], &[]);
-        let mut t = LibraryTab::new(Rc::new(catalog));
+        let mut t = LibraryTab::new(Rc::new(catalog), vec![]);
         for code in [
             KeyCode::Down,
             KeyCode::PageUp,
@@ -764,5 +931,138 @@ mod tests {
         let t = tab();
         let s = screen(&t, 60, 18);
         assert!(s.contains("T colors") && s.contains("Filter:"), "{s}");
+    }
+
+    // ---- T9.2 ----
+
+    fn roll_generator(t: &mut LibraryTab, id: &str, script: &[u32]) -> GeneratorResult {
+        t.on_event(&TabEvent::Focus(LibraryTarget::Item {
+            kind: ItemKind::Generator,
+            id: id.into(),
+        }));
+        let rolled = engine(script).generate(id).unwrap();
+        let RollResult::Generator(g) = rolled.result.clone() else {
+            unreachable!("generator")
+        };
+        t.on_event(&TabEvent::Rolled(Box::new(rolled)));
+        g
+    }
+
+    #[test]
+    fn s_without_a_generator_result_only_toasts() {
+        let mut t = tab();
+        assert_eq!(
+            t.update(ch('s')),
+            Action::Toast(Toast::info("roll a generator first"))
+        );
+        let rolled = engine(&[1]).roll_table("colors").unwrap();
+        t.on_event(&TabEvent::Rolled(Box::new(rolled)));
+        assert!(matches!(t.update(ch('s')), Action::Toast(_)));
+        assert!(!t.slot_mode);
+    }
+
+    #[test]
+    fn s_then_enter_emits_reroll_slot_with_the_selected_index() {
+        let mut t = tab();
+        let g = roll_generator(&mut t, "pair", &[2, 3, 4]);
+        assert_eq!(t.update(ch('s')), Action::None);
+        assert!(t.slot_mode && !t.captures_input());
+        t.update(key(KeyCode::Down));
+        t.update(key(KeyCode::Down));
+        t.update(key(KeyCode::Down)); // clamps at the last slot
+        assert_eq!(
+            t.update(key(KeyCode::Enter)),
+            Action::Roll(RollRequest::RerollSlot {
+                previous: Box::new(g),
+                slot: 2
+            })
+        );
+        t.update(key(KeyCode::Esc));
+        assert!(!t.slot_mode);
+    }
+
+    #[test]
+    fn slot_picker_lists_absent_slot_from_result_slots() {
+        let mut t = tab();
+        // opt: the `tail` slot fails its 50% chance on a high roll.
+        let g = roll_generator(&mut t, "opt", &[100]);
+        assert!(!g.slots[0].present, "{:?}", g.slots);
+        assert!(
+            !g.text.contains("Extra"),
+            "D-76 dropped the line: {}",
+            g.text
+        );
+        t.update(ch('s'));
+        let s = screen(&t, 100, 24);
+        assert!(s.contains("tail: (absent)"), "{s}");
+        assert!(matches!(
+            t.update(key(KeyCode::Enter)),
+            Action::Roll(RollRequest::RerollSlot { slot: 0, .. })
+        ));
+    }
+
+    #[test]
+    fn a_reroll_keeps_the_picker_and_selection_but_a_fresh_roll_resets_them() {
+        let mut t = tab();
+        roll_generator(&mut t, "pair", &[2, 3, 4]);
+        t.update(ch('s'));
+        t.update(key(KeyCode::Down));
+        t.update(key(KeyCode::Enter));
+        let prev = match &t.last.as_ref().unwrap().result {
+            RollResult::Generator(g) => g.clone(),
+            _ => unreachable!("generator"),
+        };
+        let rerolled = engine(&[2]).reroll_slot(&prev, 1).unwrap();
+        t.on_event(&TabEvent::Rolled(Box::new(rerolled)));
+        assert!(t.slot_mode);
+        assert_eq!(t.slot_selected, 1);
+        // a fresh roll (not asked for by the picker) resets
+        let fresh = engine(&[1, 1, 1]).generate("pair").unwrap();
+        t.on_event(&TabEvent::Rolled(Box::new(fresh)));
+        assert!(!t.slot_mode);
+        assert_eq!(t.slot_selected, 0);
+    }
+
+    #[test]
+    fn w_shows_loader_warnings_and_the_count_is_always_in_the_title() {
+        let mut t = tab();
+        assert!(screen(&t, 100, 24).contains("Library  warnings 1"));
+        assert!(!screen(&t, 100, 24).contains("nowhere"));
+        t.update(ch('w'));
+        let s = screen(&t, 100, 24);
+        assert!(s.contains("warning:") && s.contains("bad_ref"), "{s}");
+        t.update(ch('w'));
+        assert!(!screen(&t, 100, 24).contains("bad_ref"));
+    }
+
+    #[test]
+    fn warnings_scroll_with_up_down_while_open_and_esc_closes() {
+        let w = |n: usize| LoadWarning {
+            origin: format!("f{n}.toml"),
+            item: None,
+            kind: WarningKind::Invalid,
+            message: format!("problem {n}"),
+            kept_builtin: false,
+        };
+        let mut t = LibraryTab::new(Rc::new(fixture_catalog().0), (0..6).map(w).collect());
+        t.update(ch('w'));
+        assert!(screen(&t, 100, 24).contains("problem 0"));
+        let at = current_id(&t);
+        t.update(key(KeyCode::Down));
+        t.update(key(KeyCode::Down));
+        assert!(!screen(&t, 100, 24).contains("problem 0"));
+        assert_eq!(
+            current_id(&t),
+            at,
+            "the list does not move while the panel is open"
+        );
+        t.update(key(KeyCode::Esc));
+        assert!(!t.warnings_open);
+    }
+
+    #[test]
+    fn replaced_is_dim_and_real_problems_are_not() {
+        assert_eq!(warning_style(WarningKind::Replaced), theme::dim());
+        assert_eq!(warning_style(WarningKind::Invalid), theme::warning());
     }
 }

@@ -3,7 +3,7 @@
 //! `run` takes writers so tests can call it in-process. Every roll goes
 //! through `Engine`, so stdout is byte-identical to the journal's `result`.
 
-mod output;
+pub(crate) mod output;
 
 use std::io::Write;
 use std::path::PathBuf;

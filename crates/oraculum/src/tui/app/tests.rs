@@ -718,3 +718,21 @@ fn x_on_an_empty_journal_still_exports_the_heading() {
         .toast()
         .is_some_and(|t| t.text.starts_with("exported to ")));
 }
+
+#[test]
+fn app_reroll_slot_changes_only_that_slot_and_is_journaled_with_the_slot_key() {
+    // pair: a=colors(2 -> green), b=inner(words 3 -> gamma), c=1d6(4). Re-roll a with 1 (red).
+    let (mut app, path, _keep) = oracle_app(&[2, 3, 4, 1], true);
+    app.handle_key(ch('2'));
+    app.handle_key(ch('/'));
+    type_and_enter(&mut app, "pair");
+    app.handle_key(key(KeyCode::Enter));
+    assert!(screen(&app, 100, 24).contains("green and gamma (4)"));
+    app.handle_key(ch('s'));
+    app.handle_key(key(KeyCode::Enter));
+    let s = screen(&app, 100, 24);
+    assert!(s.contains("red and gamma (4)"), "{s}");
+    let text = std::fs::read_to_string(&path).unwrap();
+    assert_eq!(text.lines().count(), 2);
+    assert!(text.contains("pair [slot a]"), "{text}");
+}
