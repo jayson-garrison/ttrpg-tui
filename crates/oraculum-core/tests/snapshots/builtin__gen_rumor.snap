@@ -1,0 +1,7 @@
+---
+source: crates/oraculum-core/tests/builtin.rs
+expression: body
+---
+seed 1: The toll keepers say a gang is stealing salt, not coin (half true).
+seed 2: The toll keepers say the hermit on the ridge has not eaten in years (true but old news).
+seed 3: Traveling singers say something large has been digging near the quarry (false but widely believed).

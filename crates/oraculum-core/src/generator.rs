@@ -376,36 +376,46 @@ impl Generator {
     }
 
     fn render(&self, slots: Vec<SlotResult>, template_rolls: Vec<DiceRoll>) -> GeneratorResult {
-        let mut segments = Vec::new();
+        let mut segments: Vec<(RenderedSegment, bool)> = Vec::new();
         let mut rolls = template_rolls.iter();
         for seg in self.template.segments() {
             match seg {
-                Segment::Literal(text) => segments.push(RenderedSegment {
-                    text: text.clone(),
-                    slot: None,
-                }),
+                Segment::Literal(text) => segments.push((
+                    RenderedSegment {
+                        text: text.clone(),
+                        slot: None,
+                    },
+                    false,
+                )),
                 Segment::Roll(_) => {
                     if let Some(r) = rolls.next() {
-                        segments.push(RenderedSegment {
-                            text: r.total.to_string(),
-                            slot: None,
-                        });
+                        segments.push((
+                            RenderedSegment {
+                                text: r.total.to_string(),
+                                slot: None,
+                            },
+                            true,
+                        ));
                     }
                 }
                 Segment::Slot(key) => {
                     if let Some((i, def)) =
                         self.slots.iter().enumerate().find(|(_, s)| &s.key == key)
                     {
-                        segments.push(RenderedSegment {
-                            text: join_values(def, &slots[i].values),
-                            slot: Some(i),
-                        });
+                        segments.push((
+                            RenderedSegment {
+                                text: join_values(def, &slots[i].values),
+                                slot: Some(i),
+                            },
+                            true,
+                        ));
                     }
                 }
                 // Not producible in a generator template (parse rejects it).
                 Segment::TableRef(_) => {}
             }
         }
+        let segments = drop_empty_lines(segments);
         let text = segments.iter().map(|s| s.text.as_str()).collect();
         GeneratorResult {
             id: self.id.clone(),
@@ -415,6 +425,59 @@ impl Generator {
             template_rolls,
         }
     }
+}
+
+/// D-76: a template line that has placeholders, all of which rendered empty,
+/// is dropped with its newline. Lines without placeholders are untouched.
+/// Input pairs each segment with "is a placeholder" (slot or `{roll:..}`).
+fn drop_empty_lines(parts: Vec<(RenderedSegment, bool)>) -> Vec<RenderedSegment> {
+    let mut out: Vec<RenderedSegment> = Vec::new();
+    let mut line: Vec<(RenderedSegment, bool)> = Vec::new();
+    let finish = |line: &mut Vec<(RenderedSegment, bool)>, out: &mut Vec<RenderedSegment>| {
+        if line.is_empty() {
+            return;
+        }
+        let has_placeholder = line.iter().any(|(_, ph)| *ph);
+        let all_empty = line.iter().all(|(s, ph)| !*ph || s.text.is_empty());
+        if has_placeholder && all_empty {
+            let ended_with_newline = line.last().is_some_and(|(s, _)| s.text.ends_with('\n'));
+            line.clear();
+            if !ended_with_newline {
+                // Last line: drop the newline that ended the line before it.
+                if let Some(last) = out.last_mut() {
+                    if last.text.ends_with('\n') {
+                        last.text.pop();
+                    }
+                    if last.text.is_empty() {
+                        out.pop();
+                    }
+                }
+            }
+        } else {
+            out.extend(line.drain(..).map(|(s, _)| s));
+        }
+    };
+    for (seg, placeholder) in parts {
+        if placeholder || !seg.text.contains('\n') {
+            line.push((seg, placeholder));
+            continue;
+        }
+        for piece in seg.text.split_inclusive('\n') {
+            let ends = piece.ends_with('\n');
+            line.push((
+                RenderedSegment {
+                    text: piece.to_string(),
+                    slot: None,
+                },
+                false,
+            ));
+            if ends {
+                finish(&mut line, &mut out);
+            }
+        }
+    }
+    finish(&mut line, &mut out);
+    out
 }
 
 fn join_values(slot: &Slot, values: &[String]) -> String {

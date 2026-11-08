@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: verb phrase, lowercase; read after 'can'.
+name = "Creature ability"
+category = "Creatures"
+tags = ["creature", "ability"]
+description = "Something the creature can do."
+items = [
+  "dim nearby lights",
+  "leap twice its own height",
+  "mimic a voice it has heard",
+  "dig through loose rock quickly",
+  "hold its breath for an hour",
+  "climb sheer walls",
+  "spit a sticky resin",
+  "go perfectly still for hours",
+  "call others of its kind",
+  "sense warm bodies through walls",
+  "drop its tail to escape",
+  "sink into mud without a trace",
+]

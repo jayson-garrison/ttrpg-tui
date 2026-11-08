@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun phrase, lowercase; read after 'Warning sign'.
+name = "Trap sign"
+category = "Sites"
+tags = ["trap", "clue"]
+description = "A clue that something is wrong."
+items = [
+  "scratch marks near the threshold",
+  "a smell of oil",
+  "one oddly clean tile",
+  "dead insects in a line",
+  "a faint hum",
+  "fresh scuffs along one side",
+  "a draught from a hairline gap",
+  "rust-streaked walls",
+  "a brass pin in the mortar",
+  "a skeleton posed too neatly",
+  "unnaturally quiet air",
+  "wet footprints that stop short",
+]

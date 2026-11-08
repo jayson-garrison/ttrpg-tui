@@ -1,0 +1,31 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: sentence template, leaf generator (no nested generators).
+name = "Creature"
+category = "Creatures"
+tags = ["creature", "monster"]
+description = "A creature with a feature, an ability, a weakness, a habit and a lair."
+template = "Creature: {form} ({trait}; it can {ability}). Weakness: {weakness}. Behavior: {behavior}. Lair: {lair}."
+
+[[slots]]
+key = "form"
+table = "creature_form"
+
+[[slots]]
+key = "trait"
+table = "creature_trait"
+
+[[slots]]
+key = "ability"
+table = "creature_ability"
+
+[[slots]]
+key = "weakness"
+table = "creature_weakness"
+
+[[slots]]
+key = "behavior"
+table = "creature_behavior"
+
+[[slots]]
+key = "lair"
+table = "creature_lair"

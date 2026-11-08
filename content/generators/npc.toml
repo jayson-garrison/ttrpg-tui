@@ -1,0 +1,43 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: sentence template; the optional secret slot is last so an absent secret leaves no gap.
+name = "NPC"
+category = "Characters"
+tags = ["npc", "character"]
+description = "A named non-player character with a look, manner, goal and sometimes a secret."
+template = "{given} {family}, {occupation} ({age}): {appearance}. Seems {traits}. Wants to {motivation}{secret}."
+
+[[slots]]
+key = "given"
+table = "given_names"
+
+[[slots]]
+key = "family"
+table = "family_names"
+
+[[slots]]
+key = "occupation"
+table = "npc_occupation"
+
+[[slots]]
+key = "age"
+table = "npc_age"
+
+[[slots]]
+key = "appearance"
+table = "npc_appearance"
+
+[[slots]]
+key = "traits"
+table = "npc_trait"
+count = 2
+distinct = true
+join = " and "
+
+[[slots]]
+key = "motivation"
+table = "npc_motivation"
+
+[[slots]]
+key = "secret"
+table = "npc_secret"
+chance = 30

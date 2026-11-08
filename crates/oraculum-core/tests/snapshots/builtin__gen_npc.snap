@@ -1,0 +1,7 @@
+---
+source: crates/oraculum-core/tests/builtin.rs
+expression: body
+---
+seed 1: Xandry Inkwell, kennel keeper (past fifty): a limp that comes and goes. Seems fond of old songs and fiercely loyal. Wants to learn a closely guarded craft.
+seed 2: Harlan Wetherby, bridge toll keeper (barely adult): small and quick-eyed. Seems nervous around animals and fond of old songs. Wants to prove a rival wrong; secretly watches the others for someone else.
+seed 3: Yarrow Cinderford, lamplighter (very old): dressed too well for the road. Seems always hungry and generous to a fault. Wants to outlive a feud.

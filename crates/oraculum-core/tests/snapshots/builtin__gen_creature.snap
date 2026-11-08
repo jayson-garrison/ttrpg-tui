@@ -1,0 +1,7 @@
+---
+source: crates/oraculum-core/tests/builtin.rs
+expression: body
+---
+seed 1: Creature: a barrel-chested ridge ram (its hide is patched with moss; it can dig through loose rock quickly). Weakness: will not step across salt. Behavior: marks its territory with scratches. Lair: a hollow under tree roots.
+seed 2: Creature: a hollow-eyed scarecrow walker (it is covered in small bright spots; it can mimic a voice it has heard). Weakness: dislikes bright light. Behavior: marks its territory with scratches. Lair: a collapsed bell tower.
+seed 3: Creature: a coiling vine serpent (it hums when it is calm; it can go perfectly still for hours). Weakness: can be distracted by shiny things. Behavior: sleeps through all but the loudest noises. Lair: a burnt-out mill.
