@@ -30,8 +30,9 @@ fn splitmix64(state: &mut u64) -> u64 {
 fn expand_seed(seed: u64) -> [u8; 32] {
     let mut state = seed;
     let mut out = [0u8; 32];
-    for chunk in out.chunks_exact_mut(8) {
-        chunk.copy_from_slice(&splitmix64(&mut state).to_le_bytes());
+    for word in 0..4 {
+        let bytes = splitmix64(&mut state).to_le_bytes();
+        out[word * 8..word * 8 + 8].copy_from_slice(&bytes);
     }
     out
 }
