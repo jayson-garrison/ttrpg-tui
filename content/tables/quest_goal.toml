@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: bare verb or verb phrase, lowercase; followed by the target.
+name = "Quest goal"
+category = "Adventure"
+tags = ["quest", "goal"]
+description = "What the party is asked to do."
+items = [
+  "find",
+  "recover",
+  "deliver",
+  "protect",
+  "escort",
+  "investigate",
+  "return",
+  "track down",
+  "locate",
+  "retrieve",
+  "collect",
+  "examine",
+]

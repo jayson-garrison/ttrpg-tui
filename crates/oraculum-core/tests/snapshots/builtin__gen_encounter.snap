@@ -1,0 +1,14 @@
+---
+source: crates/oraculum-core/tests/builtin.rs
+expression: body
+---
+seed 1: Terrain: rocky hills. Number: 1.
+Creature: a mossy stone sentinel, dragging a heavy load.
+Disposition: playful in a dangerous way.
+seed 2: Terrain: broken cliff country. Number: 6.
+Creature: a hulking mudback, feeding on a carcass.
+Disposition: playful in a dangerous way.
+seed 3: Terrain: river valley. Number: 5.
+Creature: a mossy stone sentinel, fleeing from something unseen.
+Disposition: friendly if fed.
+Twist: a plan goes slightly wrong: summon / a lost tool

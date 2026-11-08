@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun phrase with article, lowercase; follows the goal verb.
+name = "Quest target"
+category = "Adventure"
+tags = ["quest", "target"]
+description = "What the job is about."
+items = [
+  "a sealed chest",
+  "a missing courier",
+  "a stolen ledger",
+  "a wounded messenger",
+  "a lost family heirloom",
+  "a disputed boundary stone",
+  "a runaway apprentice",
+  "a crate of unmarked bottles",
+  "a locked diary",
+  "a stray pack animal",
+  "a rumor's source",
+  "a map torn in half",
+]

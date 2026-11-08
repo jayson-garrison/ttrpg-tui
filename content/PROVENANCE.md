@@ -9,6 +9,7 @@ QA (Rick) records "reviewed" per PR below. The human sign-off line at the end is
 | T6.2 | `given_names`, `family_names`, `npc_*` (6), `npc` | Rick (QA), PR #15 | Read all 8 tables and 20 samples; `Eskel` (published-fiction name) replaced, `Underhill` swapped for `Underbank` (flagged for the human); both added to the denylist |
 | T6.3 | `rumor` (+3), `trap` (+5), `creature` (+6) | Rick (QA), PR #16 | Read all 14 tables and samples; no issues. Early-packet checkpoint (D-65) |
 | T6.4 | places: `terrain`, `atmosphere`, `place_adjective`, `place_noun`, settlement (5), tavern (2), wild (4); `settlement`, `tavern`, `wilderness_location` | pending | first use of D-76 optional lines |
+| T6.5 | `quest_*` (6), `encounter_activity`, `encounter_disposition`; `quest`, `encounter` | pending | encounter twist uses `event` at 25% (D-76 line) |
 
 ## Human sign-off by batch
 

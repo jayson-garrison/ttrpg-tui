@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: clause, lowercase; reads after 'Complication:'.
+name = "Quest complication"
+category = "Adventure"
+tags = ["quest", "twist"]
+description = "What makes it harder."
+items = [
+  "a rival party wants the same thing",
+  "the patron is lying about something",
+  "the weather turns against you",
+  "time is shorter than promised",
+  "a key witness will not talk",
+  "the route is washed out",
+  "someone is following you",
+  "the target does not want to be found",
+  "an official demands a bribe",
+  "the map is wrong",
+  "a second patron offers more",
+  "the reward is not what it seems",
+]

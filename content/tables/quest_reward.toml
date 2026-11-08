@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun phrase, lowercase; reads after 'Reward:'.
+name = "Quest reward"
+category = "Adventure"
+tags = ["quest", "reward"]
+description = "What is on offer."
+items = [
+  "a purse of silver",
+  "a favor owed by someone useful",
+  "a rare tool of good make",
+  "a month of free lodging",
+  "a map to somewhere promising",
+  "a pair of fine boots",
+  "a sealed letter of introduction",
+  "a share of the profits",
+  "a sturdy riding horse",
+  "a debt forgiven",
+  "a case of excellent wine",
+  "a small plot of land",
+]

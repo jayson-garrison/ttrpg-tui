@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun phrase with article, lowercase; reads after 'for'.
+name = "Quest patron"
+category = "Adventure"
+tags = ["quest", "patron"]
+description = "Who wants the job done."
+items = [
+  "a nervous magistrate",
+  "a retired adventurer",
+  "a grieving widow",
+  "a merchant on thin ice",
+  "a temple warden",
+  "a desperate farmer",
+  "a village child",
+  "a sharp-tongued innkeeper",
+  "a rival's former clerk",
+  "a visiting scholar",
+  "a tired watch captain",
+  "an anonymous letter",
+]

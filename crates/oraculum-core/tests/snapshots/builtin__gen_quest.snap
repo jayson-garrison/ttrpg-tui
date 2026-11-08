@@ -1,0 +1,16 @@
+---
+source: crates/oraculum-core/tests/builtin.rs
+expression: body
+---
+seed 1: Quest: locate a sealed chest, for a merchant on thin ice.
+Location: Silver Hearth
+Complication: the weather turns against you.
+Reward: a map to somewhere promising. If it fails: the town goes hungry this winter.
+seed 2: Quest: locate a map torn in half, for a grieving widow.
+Location: Amber Hearth
+Complication: a rival party wants the same thing.
+Reward: a rare tool of good make. If it fails: someone innocent is blamed.
+seed 3: Quest: track down a lost family heirloom, for a sharp-tongued innkeeper.
+Location: Bright Mill
+Complication: someone is following you.
+Reward: a map to somewhere promising. If it fails: someone innocent is blamed.
