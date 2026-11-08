@@ -20,6 +20,32 @@ pathfinder
 dungeons and dragons
 dnd
 
+# More published monsters, characters and settings (QA additions)
+drow
+githyanki
+umber hulk
+gelatinous cube
+displacer beast
+rust monster
+carrion crawler
+drizzt
+elminster
+gygax
+cthulhu
+lovecraft
+necronomicon
+dark souls
+skyrim
+witcher
+zelda
+lord of the rings
+game of thrones
+harry potter
+call of cthulhu
+shadowrun
+vampire the masquerade
+mutants and masterminds
+
 # Fiction names
 tolkien
 hobbit
