@@ -1,0 +1,32 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: multi-line template; the drawback sits alone on its labelled line (D-76).
+name = "Magic item"
+category = "Items"
+tags = ["item", "magic"]
+description = "A magic item with a base, make, power, history and sometimes a drawback."
+template = "Item: {base}\nMaterial: {material}. Quality: {quality}.\nPower: it {power}.\nHistory: {history}.\nDrawback: it {drawback}."
+
+[[slots]]
+key = "base"
+table = "item_base"
+
+[[slots]]
+key = "material"
+table = "item_material"
+
+[[slots]]
+key = "quality"
+table = "item_quality"
+
+[[slots]]
+key = "power"
+table = "item_power"
+
+[[slots]]
+key = "history"
+table = "item_history"
+
+[[slots]]
+key = "drawback"
+table = "item_drawback"
+chance = 40

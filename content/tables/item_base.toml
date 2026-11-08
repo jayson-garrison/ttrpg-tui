@@ -1,0 +1,28 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun phrase with article, lowercase.
+name = "Item base"
+category = "Items"
+tags = ["item", "object"]
+description = "The kind of object."
+items = [
+  "a lantern",
+  "a walking staff",
+  "a ring",
+  "a pair of gloves",
+  "a belt buckle",
+  "a hand mirror",
+  "a short knife",
+  "a traveling cloak",
+  "a bronze bell",
+  "a leather satchel",
+  "a drinking horn",
+  "a compass",
+  "a bone flute",
+  "a folding map case",
+  "a signet seal",
+  "a brass key",
+  "a wooden bowl",
+  "a set of dice",
+  "a wide-brimmed hat",
+  "a sewing kit",
+]

@@ -10,6 +10,7 @@ QA (Rick) records "reviewed" per PR below. The human sign-off line at the end is
 | T6.3 | `rumor` (+3), `trap` (+5), `creature` (+6) | Rick (QA), PR #16 | Read all 14 tables and samples; no issues. Early-packet checkpoint (D-65) |
 | T6.4 | places: `terrain`, `atmosphere`, `place_adjective`, `place_noun`, settlement (5), tavern (2), wild (4); `settlement`, `tavern`, `wilderness_location` | pending | first use of D-76 optional lines |
 | T6.5 | `quest_*` (6), `encounter_activity`, `encounter_disposition`; `quest`, `encounter` | pending | encounter twist uses `event` at 25% (D-76 line) |
+| T6.6 | `treasure_valuable`, `item_*` (6); `magic_item`, `treasure` | pending | nested magic item and drawback on D-76 lines |
 
 ## Human sign-off by batch
 

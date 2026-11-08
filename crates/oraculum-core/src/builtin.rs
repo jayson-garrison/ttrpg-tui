@@ -56,6 +56,30 @@ pub const TABLES: &[(&str, &str)] = &[
         include_str!("../../../content/tables/given_names.toml"),
     ),
     (
+        "item_base",
+        include_str!("../../../content/tables/item_base.toml"),
+    ),
+    (
+        "item_drawback",
+        include_str!("../../../content/tables/item_drawback.toml"),
+    ),
+    (
+        "item_history",
+        include_str!("../../../content/tables/item_history.toml"),
+    ),
+    (
+        "item_material",
+        include_str!("../../../content/tables/item_material.toml"),
+    ),
+    (
+        "item_power",
+        include_str!("../../../content/tables/item_power.toml"),
+    ),
+    (
+        "item_quality",
+        include_str!("../../../content/tables/item_quality.toml"),
+    ),
+    (
         "meaning_action",
         include_str!("../../../content/tables/meaning_action.toml"),
     ),
@@ -184,6 +208,10 @@ pub const TABLES: &[(&str, &str)] = &[
         include_str!("../../../content/tables/trap_trigger.toml"),
     ),
     (
+        "treasure_valuable",
+        include_str!("../../../content/tables/treasure_valuable.toml"),
+    ),
+    (
         "wild_danger",
         include_str!("../../../content/tables/wild_danger.toml"),
     ),
@@ -215,6 +243,10 @@ pub const GENERATORS: &[(&str, &str)] = &[
         "event",
         include_str!("../../../content/generators/event.toml"),
     ),
+    (
+        "magic_item",
+        include_str!("../../../content/generators/magic_item.toml"),
+    ),
     ("npc", include_str!("../../../content/generators/npc.toml")),
     (
         "quest",
@@ -235,6 +267,10 @@ pub const GENERATORS: &[(&str, &str)] = &[
     (
         "trap",
         include_str!("../../../content/generators/trap.toml"),
+    ),
+    (
+        "treasure",
+        include_str!("../../../content/generators/treasure.toml"),
     ),
     (
         "wilderness_location",

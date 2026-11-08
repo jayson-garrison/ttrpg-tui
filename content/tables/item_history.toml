@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: participle or clause, lowercase; reads after 'History:'.
+name = "Item history"
+category = "Items"
+tags = ["item", "history"]
+description = "Where it has been."
+items = [
+  "found in a flooded cellar",
+  "passed down through three owners",
+  "taken from a defeated bandit",
+  "won in a card game",
+  "made by a famous but forgotten smith",
+  "left behind by a traveler",
+  "buried with a local hero",
+  "traded for a debt",
+  "pulled from a riverbank",
+  "rumored to be cursed",
+  "gifted to the last owner by a stranger",
+  "stolen twice already",
+]
