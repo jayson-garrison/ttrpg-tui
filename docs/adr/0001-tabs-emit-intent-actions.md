@@ -1,0 +1,3 @@
+# Tabs emit intent actions; the App executes rolls
+
+The spec fixes `update(&mut self, KeyEvent) -> Action` for tabs and forbids tabs reading each other's state, but a roll needs the random source, clock and journal. We keep both signatures and add `Action::Roll(RollRequest)`; the App runs the Engine, appends to the journal, and sends the result back to the originating tab as an event. Tabs stay pure state machines, testable without any randomness, and rolling, journaling and error handling live in one place. Rejected: giving every tab a shared `Rc<RefCell<dyn Roller>>`, which hides ordering of random draws and couples tabs. See D-37.

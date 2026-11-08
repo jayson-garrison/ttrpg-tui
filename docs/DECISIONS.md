@@ -105,3 +105,33 @@ Records where `docs/DESIGN.md` (the spec) is ambiguous, silent, or internally in
 **D-50 Oracle twist source is a trait until the Catalog exists. [refines A§3.4]** Architecture's `ask` takes `&Catalog`, which arrives in T4. *Decision:* T2 defines `TwistSource` (one method: roll a named generator, or report what is missing) and `ask<S: TwistSource>`; `OracleResult<E>` / `Twist<E>` are generic over the event type. T4 implements `TwistSource` for `Catalog` with `E = GeneratorResult`. *Reason:* lets T2 ship and be tested (including the missing-generator case) with no placeholder catalog types; behavior and roll order are exactly as in A§3.4.
 
 **D-51 Table references resolve through `TableLookup`. [refines A§3.6]** `Table::roll` needs to find `{table:id}` targets but the Catalog arrives in T4. *Decision:* a small `TableLookup` trait (implemented for `BTreeMap<String, Table>`; T4 implements it for `Catalog`). `Table::from_toml(src, default_id)` takes the file stem as an argument so core stays free of file I/O. Error `entry` numbers are positions in the file; `TableRoll::entry_index` indexes the sorted `Table::entries`. Load-time cycle and dangling-reference checks belong to the catalog (T4); T3 provides `Table::table_refs()` and the runtime depth guard (`DepthExceeded`, max 5).
+
+**D-52 Journal write failure is non-fatal. [human-confirmed, HAG-2]** *Decision:* if an entry cannot be appended, show an error toast, keep the entry visible in the Journal tab, and keep running; the CLI exits 1 for that command.
+
+**D-53 Slot re-rolls are journaled. [human-confirmed, HAG-2]** *Decision:* each single-slot re-roll adds its own `generator` entry with input `<id> [slot <key>]` (same as D-45).
+
+**D-54 Built-in override visibility. [human-confirmed, HAG-2]** *Decision:* a valid user item replaces a built-in of the same kind and id and is listed as an informational line in the Library; an override that would break the Catalog is dropped (D-21, ADR 0003).
+
+**D-55 No file locking. [human-confirmed, HAG-2]** *Decision:* two processes on one session file are allowed without locking; each entry is one append so lines do not interleave mid-line.
+
+**D-56 Supported platforms. [human-confirmed, HAG-2]** *Decision:* macOS (Apple Silicon) and Linux only, CI-tested on both; Windows is not a goal.
+
+**D-57 Minimum terminal size. [human-confirmed, HAG-2]** *Decision:* 60x20; smaller shows a "terminal too small" message (D-36).
+
+**D-58 Glossary and ADRs. [human-confirmed, HAG-2]** *Decision:* `GLOSSARY.md` fixes the domain terms (Library = screen, Catalog = loaded set, Twist = signal, Event = content, Item = Table or Generator). ADRs live in `docs/adr/`: 0001 intent actions (D-37), 0002 own random stream (D-04), 0003 revert-user-first (D-21).
+
+**D-59 Id spelling. [human-confirmed, HAG-3]** *Decision:* item ids are lowercase letters, digits, `_` or `-`, max 64; a file with an uppercase or spaced id is rejected with a warning, never renamed.
+
+**D-60 Warning text. [human-confirmed, HAG-3]** *Decision:* `warning: <file>: <item>: <what is wrong> (<what happened: skipped / kept built-in>)`, printed in full on every content-loading CLI command and listed in the Library; no quiet mode in v1.
+
+**D-61 Error wording. [human-confirmed, HAG-3]** *Decision:* errors read `oraculum: <plain sentence>`; bad dice show the character position; an unknown table/generator id suggests up to 3 close matches using a small built-in edit distance (no new dependency).
+
+**D-62 First run and encoding. [human-confirmed, HAG-3]** *Decision:* a missing data directory is not an error and nothing is created until the first write; user TOML must be UTF-8, a leading BOM is ignored, anything else is skipped with a warning.
+
+**D-63 T6 starts after T4. [human-confirmed, HAG-3]** *Decision:* built-in content authoring begins when T4 freezes the formats, in parallel with T5 and the TUI tasks.
+
+**D-64 Headless pre-release. [human-confirmed, HAG-3]** *Decision:* the end of T5 is tagged `v0.1.0-pre`.
+
+**D-65 Early originality packet. [human-confirmed, HAG-3]** *Decision:* Rick prepares a first review packet for the human after the first five generators (extends D-46).
+
+**D-66 TUI order. [human-confirmed, HAG-3]** *Decision:* T7 Dice, T8 Oracle and Journal, T9 Library.
