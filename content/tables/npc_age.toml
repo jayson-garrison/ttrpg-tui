@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: age phrase, lowercase.
+name = "NPC age"
+category = "Characters"
+tags = ["npc", "age"]
+description = "How old a character seems."
+items = [
+  "barely adult",
+  "in their twenties",
+  "young and restless",
+  "in their thirties",
+  "settled in middle age",
+  "in their forties",
+  "graying at the temples",
+  "past fifty",
+  "well into their sixties",
+  "elderly but sharp",
+  "very old",
+  "of an age no one can guess",
+]

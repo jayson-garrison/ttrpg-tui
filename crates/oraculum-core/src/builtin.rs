@@ -12,6 +12,14 @@ pub const TABLES: &[(&str, &str)] = &[
         include_str!("../../../content/tables/event_focus.toml"),
     ),
     (
+        "family_names",
+        include_str!("../../../content/tables/family_names.toml"),
+    ),
+    (
+        "given_names",
+        include_str!("../../../content/tables/given_names.toml"),
+    ),
+    (
         "meaning_action",
         include_str!("../../../content/tables/meaning_action.toml"),
     ),
@@ -19,13 +27,40 @@ pub const TABLES: &[(&str, &str)] = &[
         "meaning_subject",
         include_str!("../../../content/tables/meaning_subject.toml"),
     ),
+    (
+        "npc_age",
+        include_str!("../../../content/tables/npc_age.toml"),
+    ),
+    (
+        "npc_appearance",
+        include_str!("../../../content/tables/npc_appearance.toml"),
+    ),
+    (
+        "npc_motivation",
+        include_str!("../../../content/tables/npc_motivation.toml"),
+    ),
+    (
+        "npc_occupation",
+        include_str!("../../../content/tables/npc_occupation.toml"),
+    ),
+    (
+        "npc_secret",
+        include_str!("../../../content/tables/npc_secret.toml"),
+    ),
+    (
+        "npc_trait",
+        include_str!("../../../content/tables/npc_trait.toml"),
+    ),
 ];
 
 /// `(file stem, file text)` for each built-in generator.
-pub const GENERATORS: &[(&str, &str)] = &[(
-    "event",
-    include_str!("../../../content/generators/event.toml"),
-)];
+pub const GENERATORS: &[(&str, &str)] = &[
+    (
+        "event",
+        include_str!("../../../content/generators/event.toml"),
+    ),
+    ("npc", include_str!("../../../content/generators/npc.toml")),
+];
 
 /// All built-in sources, sorted by file stem within each kind (tables first).
 pub fn sources() -> Vec<Source> {

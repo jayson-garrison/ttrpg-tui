@@ -190,6 +190,21 @@ fn lint_text(text: &str, denylist: &[String]) -> Vec<String> {
     p
 }
 
+/// Denylist check for the text around the entries: name, description, tags,
+/// template (QA follow-up on T6.1).
+fn lint_metadata(fields: &[(&str, String)], denylist: &[String]) -> Vec<String> {
+    let mut p = Vec::new();
+    for (field, value) in fields {
+        let w = words(value);
+        for term in denylist {
+            if w.contains(term.as_str()) {
+                p.push(format!("{field}: denylisted term {:?}", term.trim()));
+            }
+        }
+    }
+    p
+}
+
 // ---- helpers ----
 
 fn catalog() -> (Catalog, Vec<oraculum_core::catalog::LoadWarning>) {
@@ -275,6 +290,17 @@ fn denylist_is_not_empty_and_catches_known_terms() {
 }
 
 #[test]
+fn metadata_lint_covers_name_description_tags_and_template() {
+    let list = denylist_terms(DENYLIST);
+    for field in ["name", "description", "tags", "template"] {
+        let bad = [(field, "The Beholder and friends".to_string())];
+        assert_eq!(lint_metadata(&bad, &list).len(), 1, "{field}");
+    }
+    let ok = [("name", "A plain name".to_string())];
+    assert!(lint_metadata(&ok, &list).is_empty());
+}
+
+#[test]
 fn lint_rejects_non_ascii_braces_and_shape_errors() {
     let none: Vec<String> = Vec::new();
     assert!(!lint_text("caf\u{e9} owner", &none).is_empty());
@@ -347,6 +373,12 @@ fn every_table_meets_the_entry_contract() {
         if t.name.trim().is_empty() {
             at("empty name".into());
         }
+        let fields = [
+            ("name", t.name.clone()),
+            ("description", t.description.clone().unwrap_or_default()),
+            ("tags", t.tags.join(" ")),
+        ];
+        lint_metadata(&fields, &deny).into_iter().for_each(&mut at);
         if !CATEGORIES.contains(&t.category.as_str()) {
             at(format!("category {:?} not in the fixed set", t.category));
         }
@@ -407,6 +439,7 @@ fn event_focus_is_ranged_d100_and_meaning_tables_are_lists() {
 
 #[test]
 fn every_generator_meets_the_contract() {
+    let deny = denylist_terms(DENYLIST);
     let (cat, _) = catalog();
     let mut problems = Vec::new();
     for (stem, text) in builtin::GENERATORS {
@@ -428,6 +461,13 @@ fn every_generator_meets_the_contract() {
             .and_then(toml::Value::as_str)
             .unwrap_or_default()
             .to_string();
+        let fields = [
+            ("name", g.name.clone()),
+            ("description", g.description.clone().unwrap_or_default()),
+            ("tags", g.tags.join(" ")),
+            ("template", template.clone()),
+        ];
+        lint_metadata(&fields, &deny).into_iter().for_each(&mut at);
         for s in &g.slots {
             if !template.contains(&format!("{{{}}}", s.key)) {
                 at(format!("template does not use slot {:?}", s.key));
