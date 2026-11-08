@@ -136,14 +136,14 @@ fn join_and_list_rendering() {
 
 #[test]
 fn chance_decides_presence_and_absent_slots_roll_nothing_else() {
-    let cat = one_slot("table = \"t\"\nchance = 60", "[{s}]", &[]);
+    let cat = one_slot("table = \"t\"\nchance = 60", "x\\n[{s}]", &[]);
     let (res, r) = gen_text(&cat, &[60, 3]);
-    assert_eq!(res.text, "[C]");
+    assert_eq!(res.text, "x\n[C]");
     assert!(res.slots[0].present);
     assert_eq!(r.calls(), &[rc(100, 60), rc(4, 3)]);
 
     let (res, r) = gen_text(&cat, &[61]);
-    assert_eq!(res.text, "[]");
+    assert_eq!(res.text, "x");
     assert!(!res.slots[0].present && res.slots[0].values.is_empty());
     assert_eq!(r.calls(), &[rc(100, 61)]);
 }
@@ -227,14 +227,48 @@ fn reroll_slot_changes_only_that_slot_and_keeps_template_rolls() {
 
 #[test]
 fn reroll_forces_an_absent_slot_present() {
-    let cat = one_slot("table = \"t\"\nchance = 1", "[{s}]", &[]);
+    let cat = one_slot("table = \"t\"\nchance = 1", "kept\\nLabel: {s}", &[]);
     let (first, _) = gen_text(&cat, &[50]);
-    assert_eq!(first.text, "[]");
+    assert_eq!(first.text, "kept");
     let mut r = ScriptedRoller::new([3]);
     let again = cat.reroll_slot(&first, 0, &mut r).unwrap();
-    assert_eq!(again.text, "[C]");
+    assert_eq!(again.text, "kept\nLabel: C");
     assert!(again.slots[0].present);
     assert_eq!(r.calls(), &[rc(4, 3)]);
+}
+
+/// D-76: a line whose placeholders all render empty is dropped with its newline.
+fn absent_text(template: &str) -> String {
+    let cat = one_slot("table = \"t\"\nchance = 1", template, &[]);
+    gen_text(&cat, &[50]).0.text
+}
+
+#[test]
+fn all_empty_line_is_dropped_first_middle_and_last() {
+    assert_eq!(absent_text("{s}\\nb\\nc"), "b\nc");
+    assert_eq!(absent_text("a\\nR: {s}\\nc"), "a\nc");
+    assert_eq!(absent_text("a\\nb\\nR: {s}"), "a\nb");
+    assert_eq!(absent_text("only {s}"), "");
+}
+
+#[test]
+fn mixed_and_plain_lines_are_kept() {
+    // One non-empty placeholder keeps the line (here a template roll).
+    let cat = one_slot("table = \"t\"\nchance = 1", "a {s}{roll:1d2}\\nb", &[]);
+    assert_eq!(gen_text(&cat, &[50, 2]).0.text, "a 2\nb");
+    // A line with no placeholder is kept, even when empty.
+    assert_eq!(absent_text("a\\n\\nb {s}"), "a\n");
+    let cat = one_slot("table = \"t\"", "a\\nR: {s}\\nc", &[]);
+    assert_eq!(gen_text(&cat, &[2]).0.text, "a\nR: B\nc");
+}
+
+#[test]
+fn a_dropped_line_keeps_segments_consistent_with_text() {
+    let cat = one_slot("table = \"t\"\nchance = 1", "a\\nR: {s}\\nc", &[]);
+    let (res, _) = gen_text(&cat, &[50]);
+    let joined: String = res.segments.iter().map(|s| s.text.as_str()).collect();
+    assert_eq!(joined, res.text);
+    assert_eq!(res.text, "a\nc");
 }
 
 fn rejected(slot_body: &str, template: &str, needle: &str) {
