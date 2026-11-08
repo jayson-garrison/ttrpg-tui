@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: participle phrase, lowercase.
+name = "Dungeon origin"
+category = "Sites"
+tags = ["dungeon", "history"]
+description = "How it came to be."
+items = [
+  "built by a long-vanished order",
+  "carved by miners chasing a vein",
+  "raised as a lord's refuge",
+  "dug as a smugglers' haven",
+  "left behind by a flood",
+  "grown over an older ruin",
+  "made to hold a prisoner",
+  "started as a wine cellar",
+  "used for secret meetings",
+  "built to guard a spring",
+  "once a school",
+  "made in a single night",
+]

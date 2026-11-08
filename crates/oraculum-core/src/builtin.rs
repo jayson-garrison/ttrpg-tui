@@ -36,6 +36,26 @@ pub const TABLES: &[(&str, &str)] = &[
         include_str!("../../../content/tables/creature_weakness.toml"),
     ),
     (
+        "dungeon_entrance",
+        include_str!("../../../content/tables/dungeon_entrance.toml"),
+    ),
+    (
+        "dungeon_inhabitant",
+        include_str!("../../../content/tables/dungeon_inhabitant.toml"),
+    ),
+    (
+        "dungeon_origin",
+        include_str!("../../../content/tables/dungeon_origin.toml"),
+    ),
+    (
+        "dungeon_state",
+        include_str!("../../../content/tables/dungeon_state.toml"),
+    ),
+    (
+        "dungeon_type",
+        include_str!("../../../content/tables/dungeon_type.toml"),
+    ),
+    (
         "encounter_activity",
         include_str!("../../../content/tables/encounter_activity.toml"),
     ),
@@ -144,6 +164,22 @@ pub const TABLES: &[(&str, &str)] = &[
         include_str!("../../../content/tables/quest_target.toml"),
     ),
     (
+        "room_contents",
+        include_str!("../../../content/tables/room_contents.toml"),
+    ),
+    (
+        "room_exit",
+        include_str!("../../../content/tables/room_exit.toml"),
+    ),
+    (
+        "room_feature",
+        include_str!("../../../content/tables/room_feature.toml"),
+    ),
+    (
+        "room_shape",
+        include_str!("../../../content/tables/room_shape.toml"),
+    ),
+    (
         "rumor_claim",
         include_str!("../../../content/tables/rumor_claim.toml"),
     ),
@@ -234,6 +270,14 @@ pub const GENERATORS: &[(&str, &str)] = &[
     (
         "creature",
         include_str!("../../../content/generators/creature.toml"),
+    ),
+    (
+        "dungeon",
+        include_str!("../../../content/generators/dungeon.toml"),
+    ),
+    (
+        "dungeon_room",
+        include_str!("../../../content/generators/dungeon_room.toml"),
     ),
     (
         "encounter",
