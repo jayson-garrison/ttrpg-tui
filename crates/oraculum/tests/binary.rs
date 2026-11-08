@@ -123,7 +123,12 @@ fn warnings_go_to_stderr_only() {
         .code(0)
         .get_output()
         .clone();
-    assert!(out.stdout.is_empty());
+    // Built-in content may print here (D-72); the warning must not.
+    let stdout = String::from_utf8(out.stdout).unwrap();
+    assert!(
+        !stdout.contains("warning") && !stdout.contains("bad.toml"),
+        "{stdout}"
+    );
     let err = String::from_utf8(out.stderr).unwrap();
     assert_eq!(err.lines().count(), 1, "{err}");
     assert!(err.starts_with("warning: tables/bad.toml: bad: "), "{err}");

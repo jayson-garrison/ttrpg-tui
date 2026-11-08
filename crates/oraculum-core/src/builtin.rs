@@ -6,10 +6,26 @@
 use crate::catalog::Source;
 
 /// `(file stem, file text)` for each built-in table.
-pub const TABLES: &[(&str, &str)] = &[];
+pub const TABLES: &[(&str, &str)] = &[
+    (
+        "event_focus",
+        include_str!("../../../content/tables/event_focus.toml"),
+    ),
+    (
+        "meaning_action",
+        include_str!("../../../content/tables/meaning_action.toml"),
+    ),
+    (
+        "meaning_subject",
+        include_str!("../../../content/tables/meaning_subject.toml"),
+    ),
+];
 
 /// `(file stem, file text)` for each built-in generator.
-pub const GENERATORS: &[(&str, &str)] = &[];
+pub const GENERATORS: &[(&str, &str)] = &[(
+    "event",
+    include_str!("../../../content/generators/event.toml"),
+)];
 
 /// All built-in sources, sorted by file stem within each kind (tables first).
 pub fn sources() -> Vec<Source> {

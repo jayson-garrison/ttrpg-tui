@@ -39,6 +39,7 @@ fn real_main() -> anyhow::Result<ExitCode> {
         let mut stdout = std::io::stdout().lock();
         let mut stderr = std::io::stderr().lock();
         let env = Env {
+            builtin: oraculum_core::builtin::sources(),
             data_dir,
             session,
             seed,

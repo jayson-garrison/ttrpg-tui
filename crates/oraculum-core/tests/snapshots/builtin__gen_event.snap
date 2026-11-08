@@ -1,0 +1,7 @@
+---
+source: crates/oraculum-core/tests/builtin.rs
+expression: body
+---
+seed 1: news or a message arrives: release / the weather
+seed 2: a secret slips out: shelter / an oath
+seed 3: news or a message arrives: sabotage / the weather

@@ -1,0 +1,28 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: single verb, lowercase, no article.
+name = "Meaning: action"
+category = "Oracle"
+tags = ["oracle", "event"]
+description = "A verb that gives an event its direction. Read with Meaning: subject."
+items = [
+  "gather",
+  "conceal",
+  "abandon",
+  "mend",
+  "pursue",
+  "bargain",
+  "scatter",
+  "guard",
+  "summon",
+  "betray",
+  "borrow",
+  "shelter",
+  "sabotage",
+  "restore",
+  "command",
+  "deceive",
+  "release",
+  "hoard",
+  "challenge",
+  "follow",
+]

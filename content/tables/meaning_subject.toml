@@ -1,0 +1,28 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun phrase with its own article, lowercase.
+name = "Meaning: subject"
+category = "Oracle"
+tags = ["oracle", "event"]
+description = "A thing the event is about. Read with Meaning: action."
+items = [
+  "a debt",
+  "the harvest",
+  "an oath",
+  "a stranger",
+  "the road",
+  "a promise",
+  "old stone",
+  "the weather",
+  "a letter",
+  "a crown",
+  "a hidden door",
+  "the night watch",
+  "a fever",
+  "a river crossing",
+  "a borrowed name",
+  "the market",
+  "a lost tool",
+  "a shared meal",
+  "a broken seal",
+  "the nearest ruin",
+]
