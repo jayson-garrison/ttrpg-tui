@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: clause, lowercase; reads after 'Trouble:'.
+name = "Settlement problem"
+category = "Places"
+tags = ["settlement", "problem"]
+description = "What is going wrong."
+items = [
+  "the well has turned bitter",
+  "bandits tax the road",
+  "a feud between two families",
+  "the granary is nearly empty",
+  "the bridge needs repair and no one will pay",
+  "strange lights hang over the fields",
+  "a recent fire left many homeless",
+  "rival guilds refuse to cooperate",
+  "wolves are taking livestock",
+  "a plague scare keeps visitors away",
+  "a stranger is buying up land",
+  "the mill owner is missing",
+]

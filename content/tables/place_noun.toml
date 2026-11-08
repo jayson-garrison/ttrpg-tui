@@ -1,0 +1,38 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: capitalised single noun; second word of a two-word name, also fits an inn.
+name = "Place noun"
+category = "Places"
+tags = ["name", "place"]
+description = "Second word of a place name."
+items = [
+  "Lantern",
+  "Anchor",
+  "Crossing",
+  "Ford",
+  "Hollow",
+  "Bridge",
+  "Harbor",
+  "Spire",
+  "Gate",
+  "Well",
+  "Barrow",
+  "Meadow",
+  "Hearth",
+  "Cairn",
+  "Landing",
+  "Vale",
+  "Reach",
+  "Mill",
+  "Wharf",
+  "Bell",
+  "Orchard",
+  "Haven",
+  "Fen",
+  "Crest",
+  "Ridge",
+  "Cove",
+  "Grove",
+  "Hill",
+  "Weir",
+  "Oak",
+]

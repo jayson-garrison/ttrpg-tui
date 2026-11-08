@@ -17,9 +17,9 @@ File stem == id. Every file is listed in `crates/oraculum-core/src/builtin.rs` (
 
 ## Optional slots (chance below 100)
 
-An absent slot renders as nothing, and templates have no conditional text. So an optional slot goes last,
-before the closing punctuation, and its entries carry their own separator, e.g. `npc_secret` entries start
-with `; secretly ...` and the `npc` template ends `{motivation}{secret}.`. Declare this in the table's `Form:`.
+D-76: a template line whose placeholders all render empty is dropped with its newline. Put an optional slot
+(table or generator) on its own labelled line, e.g. `Rumor: {rumor}`, never mid-sentence and never sharing a line
+with a mandatory slot. (`npc_secret` predates D-76 and uses `; secretly ...` entries; both patterns work.)
 
 ## Tests and snapshots
 

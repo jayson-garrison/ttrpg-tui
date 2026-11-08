@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: plural or mass noun phrase, lowercase; reads after 'trades in'.
+name = "Settlement trade"
+category = "Places"
+tags = ["settlement", "trade"]
+description = "What it makes or sells."
+items = [
+  "wool and cloth",
+  "salted fish",
+  "clay pots",
+  "timber",
+  "iron tools",
+  "honey and wax",
+  "dried fruit",
+  "barley and ale",
+  "dyed leather",
+  "salt",
+  "carved bone",
+  "river barges",
+]

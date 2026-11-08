@@ -1,0 +1,22 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun phrase, lowercase, no article.
+name = "Terrain"
+category = "Places"
+tags = ["terrain", "wilderness"]
+description = "The lay of the land. Reused by encounters."
+items = [
+  "dense forest",
+  "open grassland",
+  "rocky hills",
+  "tidal marsh",
+  "dry scrubland",
+  "river valley",
+  "windswept moor",
+  "mountain pass",
+  "sandy coast",
+  "shallow lakeshore",
+  "burnt woodland",
+  "terraced farmland",
+  "broken cliff country",
+  "misty fenland",
+]

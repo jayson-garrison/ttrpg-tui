@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun phrase, lowercase; reads after 'Clientele:'.
+name = "Tavern clientele"
+category = "Places"
+tags = ["tavern", "crowd"]
+description = "Who drinks there."
+items = [
+  "mostly local farmers",
+  "caravan guards between jobs",
+  "river bargemen",
+  "quiet scholars and scribes",
+  "off-duty watchmen",
+  "wandering performers",
+  "pilgrims and travelers",
+  "miners fresh from the shaft",
+  "suspicious regulars who stop talking when strangers enter",
+  "merchants haggling in corners",
+  "a famously loud card circle",
+  "retired soldiers swapping tales",
+]

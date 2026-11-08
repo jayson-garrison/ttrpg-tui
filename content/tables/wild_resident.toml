@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun phrase with article, lowercase; reads after 'Resident:'.
+name = "Wild resident"
+category = "Places"
+tags = ["wilderness", "resident"]
+description = "Someone or something living there."
+items = [
+  "a lone hermit with strong opinions",
+  "a family of foragers",
+  "a patrol of tired soldiers",
+  "a wary shepherd and her dogs",
+  "a hunter who trades pelts",
+  "a stranded merchant",
+  "a pair of runaways",
+  "a traveling healer",
+  "a gang of poachers",
+  "a surveyor mapping the land",
+  "a cheerful beekeeper",
+  "a pack of hungry wolves",
+]

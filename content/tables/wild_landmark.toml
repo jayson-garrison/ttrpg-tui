@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun phrase with article, lowercase.
+name = "Wild landmark"
+category = "Places"
+tags = ["wilderness", "landmark"]
+description = "Something to navigate by."
+items = [
+  "a lone split boulder",
+  "a fallen watchtower",
+  "a circle of dead trees",
+  "a waterfall with a cave behind it",
+  "an abandoned shepherd's hut",
+  "a rope bridge over a gorge",
+  "a burned wagon",
+  "a cairn taller than a person",
+  "a ruined mill",
+  "a pool of unnaturally still water",
+  "a hollow giant tree",
+  "a rusted iron gate standing alone",
+]

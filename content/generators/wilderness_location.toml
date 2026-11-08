@@ -1,0 +1,28 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: multi-line template; the resident sits alone on its labelled last line (D-76).
+name = "Wilderness location"
+category = "Places"
+tags = ["wilderness", "place"]
+description = "A stretch of wilderness with a landmark, a feature, a danger and maybe a resident."
+template = "Terrain: {terrain}. Landmark: {landmark}.\nFeature: {feature}. Danger: {danger}.\nResident: {resident}"
+
+[[slots]]
+key = "terrain"
+table = "terrain"
+
+[[slots]]
+key = "landmark"
+table = "wild_landmark"
+
+[[slots]]
+key = "feature"
+table = "wild_feature"
+
+[[slots]]
+key = "danger"
+table = "wild_danger"
+
+[[slots]]
+key = "resident"
+table = "wild_resident"
+chance = 50

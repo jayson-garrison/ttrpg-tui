@@ -1,0 +1,38 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: capitalised single word; first word of a two-word name.
+name = "Place adjective"
+category = "Places"
+tags = ["name", "place"]
+description = "First word of a place name."
+items = [
+  "Amber",
+  "Silver",
+  "Gray",
+  "Red",
+  "Old",
+  "Broken",
+  "Quiet",
+  "Golden",
+  "Crooked",
+  "Lonely",
+  "Bright",
+  "Winter",
+  "Salt",
+  "Copper",
+  "Iron",
+  "Green",
+  "Pale",
+  "Wandering",
+  "Sunken",
+  "Low",
+  "High",
+  "Mossy",
+  "Rusty",
+  "Thorny",
+  "Misty",
+  "Hidden",
+  "Blue",
+  "Ash",
+  "Wild",
+  "Last",
+]

@@ -1,0 +1,28 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: adjective phrase, lowercase.
+name = "Atmosphere"
+category = "Places"
+tags = ["atmosphere", "mood"]
+description = "The mood of a room or place. Shared by taverns and dungeon rooms."
+items = [
+  "smoky and warm",
+  "cold and echoing",
+  "crowded and loud",
+  "quiet and watchful",
+  "damp and musty",
+  "bright and cheerful",
+  "dim and cramped",
+  "tense with whispers",
+  "draughty and bare",
+  "cozy and cluttered",
+  "eerily still",
+  "sweet with spice",
+  "noisy with music",
+  "dusty and forgotten",
+  "sticky underfoot",
+  "lit by a single lamp",
+  "heavy with incense",
+  "chilly despite the fire",
+  "rowdy and sprawling",
+  "orderly and spotless",
+]
