@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun phrase with article, lowercase; read after 'Lair'.
+name = "Creature lair"
+category = "Creatures"
+tags = ["creature", "lair"]
+description = "Where it lives."
+items = [
+  "a collapsed bell tower",
+  "a flooded cellar",
+  "a hollow under tree roots",
+  "a drained cistern",
+  "the ribs of a wrecked boat",
+  "a sinkhole with a wide ledge",
+  "a burnt-out mill",
+  "a seam in a sea cliff",
+  "a cramped culvert under a road",
+  "a roofless barn",
+  "a quarry pit",
+  "a crevice behind a waterfall",
+]

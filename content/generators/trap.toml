@@ -1,0 +1,27 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: sentence template, leaf generator (no nested generators).
+name = "Trap"
+category = "Sites"
+tags = ["trap", "site"]
+description = "A trap: what sets it off, how it works, what it does and how to spot it."
+template = "Triggered by {trigger}: {mechanism} {effect}. Warning sign: {sign}. Danger: {severity}."
+
+[[slots]]
+key = "trigger"
+table = "trap_trigger"
+
+[[slots]]
+key = "mechanism"
+table = "trap_mechanism"
+
+[[slots]]
+key = "effect"
+table = "trap_effect"
+
+[[slots]]
+key = "sign"
+table = "trap_sign"
+
+[[slots]]
+key = "severity"
+table = "trap_severity"

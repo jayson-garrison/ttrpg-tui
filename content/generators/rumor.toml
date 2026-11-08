@@ -1,0 +1,19 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: sentence template, leaf generator (no nested generators).
+name = "Rumor"
+category = "Adventure"
+tags = ["rumor", "adventure"]
+description = "A rumor with a source and a note on how true it is."
+template = "{source} say {claim} ({veracity})."
+
+[[slots]]
+key = "source"
+table = "rumor_source"
+
+[[slots]]
+key = "claim"
+table = "rumor_claim"
+
+[[slots]]
+key = "veracity"
+table = "rumor_veracity"

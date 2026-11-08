@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: clause fragment, lowercase; read after Behavior.
+name = "Creature behavior"
+category = "Creatures"
+tags = ["creature", "behavior"]
+description = "How it acts."
+items = [
+  "hunts only at dusk",
+  "circles before it attacks",
+  "guards a hoard of odd stones",
+  "flees from anything larger",
+  "follows travelers at a distance",
+  "nests in groups",
+  "marks its territory with scratches",
+  "shares a meal only with its own young",
+  "hunts by patient ambush",
+  "raids at the first sign of frost",
+  "tests defences before committing",
+  "sleeps through all but the loudest noises",
+]

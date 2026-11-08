@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: clause fragment, lowercase; read after the form and a colon.
+name = "Creature trait"
+category = "Creatures"
+tags = ["creature", "trait"]
+description = "A distinctive feature."
+items = [
+  "its hide is patched with moss",
+  "it moves in sudden bursts",
+  "its eyes reflect light like coins",
+  "it smells strongly of wet iron",
+  "it hums when it is calm",
+  "its call carries for miles",
+  "a ridge of bone runs down its back",
+  "it leaves glossy trails behind it",
+  "its skin shifts color with its mood",
+  "it is oddly graceful",
+  "it favors one side as if old-wounded",
+  "it is covered in small bright spots",
+]
