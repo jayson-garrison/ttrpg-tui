@@ -4,15 +4,17 @@
 use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 use oraculum_core::clock::Clock;
 use oraculum_core::engine::{Engine, Rolled};
+use oraculum_core::journal::{export_markdown, Entry};
 use ratatui::layout::{Constraint, Layout};
 use ratatui::Frame;
 
 use super::action::{Action, AppInfo, RollRequest, Tab, TabEvent, TabId, Toast};
 use super::tabs::dice::DiceTab;
+use super::tabs::journal::JournalTab;
 use super::tabs::oracle::OracleTab;
 use super::tabs::placeholder::PlaceholderTab;
 use super::widgets::{help, status_line, tab_bar, too_small};
-use crate::storage::JournalStore;
+use crate::storage::{write_export, JournalStore};
 
 /// How long a toast stays, in seconds (D-80).
 const TOAST_SECONDS: u64 = 3;
@@ -35,7 +37,7 @@ impl App {
             Box::new(OracleTab::new()),
             Box::new(PlaceholderTab::new(TabId::Library, "Library")),
             Box::new(DiceTab::new()),
-            Box::new(PlaceholderTab::new(TabId::Journal, "Journal")),
+            Box::new(JournalTab::new()),
         ];
         App::with_tabs(info, engine, store, clock, tabs)
     }
@@ -182,10 +184,12 @@ impl App {
             }
             Action::Toast(t) => self.show_toast(t),
             Action::Roll(request) => self.roll(request),
-            // Notes and export arrive with T8.2, Library jumps with T9.1.
-            Action::AppendNote(_) | Action::ExportJournal => {
-                self.show_toast(Toast::info("not available yet"))
+            Action::AppendNote(text) => {
+                let entry = self.engine.note(&text);
+                self.persist(&entry);
+                self.send(TabId::Journal, &TabEvent::JournalAppended(entry));
             }
+            Action::ExportJournal => self.export(),
             Action::OpenInLibrary(_) => self.show_toast(Toast::info("Library not available yet")),
         }
         true
@@ -216,14 +220,34 @@ impl App {
             Err(msg) => self.send(origin, &TabEvent::RollFailed(msg)),
             Ok(rolled) => {
                 let entry = rolled.entry.clone();
-                if let Err(e) = self.store.append(&entry) {
-                    let msg = format!("journal write failed: {e}");
-                    self.show_toast(Toast::error(msg.clone()));
-                    self.send(TabId::Journal, &TabEvent::JournalWriteFailed(msg));
-                }
+                self.persist(&entry);
                 self.send(origin, &TabEvent::Rolled(Box::new(rolled)));
                 self.send(TabId::Journal, &TabEvent::JournalAppended(entry));
             }
+        }
+    }
+
+    /// Append to the session file. A failure toasts and tells the Journal tab;
+    /// the caller still shows the entry (A§5.4).
+    fn persist(&mut self, entry: &Entry) {
+        if let Err(e) = self.store.append(entry) {
+            let msg = format!("journal write failed: {e}");
+            self.show_toast(Toast::error(msg.clone()));
+            self.send(TabId::Journal, &TabEvent::JournalWriteFailed(msg));
+        }
+    }
+
+    /// Same file and text as `oraculum export` (D-77).
+    fn export(&mut self) {
+        let load = match self.store.load() {
+            Ok(load) => load,
+            Err(e) => return self.show_toast(Toast::error(format!("cannot read journal: {e}"))),
+        };
+        let path = self.info.data_dir.export_path();
+        let markdown = export_markdown(&self.info.session, &load.entries);
+        match write_export(&path, &markdown) {
+            Ok(()) => self.show_toast(Toast::info(format!("exported to {}", path.display()))),
+            Err(e) => self.show_toast(Toast::error(format!("export failed: {e}"))),
         }
     }
 
