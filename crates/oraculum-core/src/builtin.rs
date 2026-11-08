@@ -1,0 +1,71 @@
+//! Built-in content, embedded at compile time (A§3.11, D-27).
+//!
+//! `include_str!` keeps core free of file I/O. T6 fills these lists; the test
+//! below fails if a file in `content/` is missing from them (or vice versa).
+
+use crate::catalog::Source;
+
+/// `(file stem, file text)` for each built-in table.
+pub const TABLES: &[(&str, &str)] = &[];
+
+/// `(file stem, file text)` for each built-in generator.
+pub const GENERATORS: &[(&str, &str)] = &[];
+
+/// All built-in sources, sorted by file stem within each kind (tables first).
+pub fn sources() -> Vec<Source> {
+    let mut tables: Vec<_> = TABLES.to_vec();
+    tables.sort_by_key(|(stem, _)| *stem);
+    let mut generators: Vec<_> = GENERATORS.to_vec();
+    generators.sort_by_key(|(stem, _)| *stem);
+    tables
+        .into_iter()
+        .map(|(stem, text)| Source::table(&format!("builtin:tables/{stem}.toml"), stem, text))
+        .chain(generators.into_iter().map(|(stem, text)| {
+            Source::generator(&format!("builtin:generators/{stem}.toml"), stem, text)
+        }))
+        .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::path::Path;
+
+    fn stems_in(dir: &str) -> Vec<String> {
+        let path = Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../content")
+            .join(dir);
+        let mut stems: Vec<String> = std::fs::read_dir(path)
+            .map(|rd| {
+                rd.filter_map(Result::ok)
+                    .filter_map(|e| {
+                        let p = e.path();
+                        (p.extension()? == "toml")
+                            .then(|| p.file_stem()?.to_str().map(String::from))?
+                    })
+                    .collect()
+            })
+            .unwrap_or_default();
+        stems.sort();
+        stems
+    }
+
+    fn listed(list: &[(&str, &str)]) -> Vec<String> {
+        let mut v: Vec<String> = list.iter().map(|(s, _)| (*s).to_string()).collect();
+        v.sort();
+        v
+    }
+
+    #[test]
+    fn lists_match_the_content_directory() {
+        assert_eq!(listed(TABLES), stems_in("tables"));
+        assert_eq!(listed(GENERATORS), stems_in("generators"));
+    }
+
+    #[test]
+    fn sources_are_tagged_and_sorted() {
+        let s = sources();
+        assert_eq!(s.len(), TABLES.len() + GENERATORS.len());
+        assert!(s.iter().all(|x| x.origin.starts_with("builtin:")));
+    }
+}

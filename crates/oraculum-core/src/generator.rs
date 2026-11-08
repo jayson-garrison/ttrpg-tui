@@ -281,7 +281,7 @@ pub trait Content: TableLookup {
     fn generator(&self, id: &str) -> Option<&Generator>;
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub struct GeneratorResult {
     pub id: String,
     /// Concatenation of the segments' text.
@@ -293,21 +293,21 @@ pub struct GeneratorResult {
     pub template_rolls: Vec<DiceRoll>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub struct RenderedSegment {
     pub text: String,
     /// Index into `GeneratorResult::slots` when the text came from a slot.
     pub slot: Option<usize>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub enum SlotSourceRef {
     Table(String),
     Generator(String),
     Dice(String),
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub struct SlotResult {
     pub key: String,
     pub source: SlotSourceRef,
@@ -319,7 +319,7 @@ pub struct SlotResult {
     pub detail: Vec<ValueDetail>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub enum ValueDetail {
     Table(TableRoll),
     Generator(Box<GeneratorResult>),

@@ -70,6 +70,10 @@ pub enum WarningKind {
     DepthExceeded,
     UnusedSlot,
     IgnoredField,
+    /// A content file could not be read (added by the storage layer).
+    FileUnreadable,
+    /// A content file is over the size limit (added by the storage layer).
+    FileTooLarge,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

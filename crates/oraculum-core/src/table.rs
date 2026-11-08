@@ -124,13 +124,13 @@ impl TableLookup for BTreeMap<String, Table> {
 }
 
 /// A resolved `{table:..}` or `{roll:..}` inside an entry, in order.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub enum ResolvedRef {
     Table(Box<TableRoll>),
     Dice(DiceRoll),
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub struct TableRoll {
     pub table_id: String,
     pub dice: DiceRoll,
