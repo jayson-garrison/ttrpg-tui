@@ -10,7 +10,7 @@ use std::path::PathBuf;
 use std::rc::Rc;
 
 use clap::{Parser, Subcommand, ValueEnum};
-use oraculum_core::catalog::{Catalog, Filter, ItemKind, Source};
+use oraculum_core::catalog::{Catalog, Filter, ItemKind, LoadWarning, Source};
 use oraculum_core::clock::Clock;
 use oraculum_core::engine::{Engine, Rolled};
 use oraculum_core::error::EvalError;
@@ -174,15 +174,22 @@ fn engine(catalog: Rc<Catalog>, seed: u64, clock: Box<dyn Clock>) -> Engine {
     Engine::new(catalog, Box::new(RngRoller::from_seed(seed)), clock)
 }
 
-/// Built-in plus user content; every load warning goes to stderr (D-60).
+/// Built-in plus user content, with every load warning (file warnings first).
+pub fn build_catalog(data_dir: &DataDir, builtin: &[Source]) -> (Catalog, Vec<LoadWarning>) {
+    let (user, mut warnings) = load_user_sources(data_dir);
+    let (catalog, build_warnings) = Catalog::build(builtin, &user);
+    warnings.extend(build_warnings);
+    (catalog, warnings)
+}
+
+/// Like `build_catalog`, but every load warning goes to stderr (D-60).
 fn load_catalog(
     data_dir: &DataDir,
     builtin: &[Source],
     err: &mut dyn Write,
 ) -> Result<Rc<Catalog>, AppError> {
-    let (user, file_warnings) = load_user_sources(data_dir);
-    let (catalog, warnings) = Catalog::build(builtin, &user);
-    for w in file_warnings.iter().chain(&warnings) {
+    let (catalog, warnings) = build_catalog(data_dir, builtin);
+    for w in &warnings {
         writeln!(err, "{}", output::format_warning(w))?;
     }
     Ok(Rc::new(catalog))
