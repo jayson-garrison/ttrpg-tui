@@ -23,6 +23,7 @@ struct Stub {
     capture: bool,
     seen: Rc<RefCell<Vec<KeyCode>>>,
     next: Action,
+    events: Rc<RefCell<Vec<TabEvent>>>,
 }
 
 impl Tab for Stub {
@@ -47,7 +48,9 @@ impl Tab for Stub {
     fn captures_input(&self) -> bool {
         self.capture
     }
-    fn on_event(&mut self, _ev: &TabEvent) {}
+    fn on_event(&mut self, ev: &TabEvent) {
+        self.events.borrow_mut().push(ev.clone());
+    }
     fn help(&self) -> &'static [(&'static str, &'static str)] {
         &[("Enter", "roll the stub")]
     }
@@ -58,6 +61,7 @@ struct Fixture {
     now: Rc<Cell<u64>>,
     seen: Vec<Rc<RefCell<Vec<KeyCode>>>>,
     _dir: tempfile::TempDir,
+    _store_dir: tempfile::TempDir,
 }
 
 /// Four stub tabs; `capturing` lists the tab indexes that hold a text field.
@@ -76,6 +80,7 @@ fn fixture(capturing: &[usize], warnings: usize) -> Fixture {
                 capture: capturing.contains(&i),
                 seen: log,
                 next: Action::None,
+                events: Rc::default(),
             }) as Box<dyn Tab>
         })
         .collect();
@@ -85,12 +90,20 @@ fn fixture(capturing: &[usize], warnings: usize) -> Fixture {
         warnings: (0..warnings).map(|_| warning()).collect(),
         data_dir: crate::storage::DataDir::resolve(Some(dir.path().to_path_buf())).unwrap(),
     };
-    let app = App::with_tabs(info, Box::new(TestClock(now.clone())), tabs);
+    let (store, store_dir) = crate::tui::testkit::store();
+    let app = App::with_tabs(
+        info,
+        crate::tui::testkit::engine(&[]),
+        store,
+        Box::new(TestClock(now.clone())),
+        tabs,
+    );
     Fixture {
         app,
         now,
         seen,
         _dir: dir,
+        _store_dir: store_dir,
     }
 }
 
@@ -211,6 +224,7 @@ fn tab_actions_are_executed() {
         capture: false,
         seen: Rc::default(),
         next: Action::SwitchTab(TabId::Journal),
+        events: Rc::default(),
     });
     f.app.handle_key(key(KeyCode::Enter));
     assert_eq!(f.app.active(), Some(TabId::Journal));
@@ -221,6 +235,7 @@ fn tab_actions_are_executed() {
         capture: false,
         seen: Rc::default(),
         next: Action::Quit,
+        events: Rc::default(),
     });
     assert!(!f.app.handle_key(key(KeyCode::Enter)));
 }
@@ -247,6 +262,7 @@ fn not_yet_built_actions_toast_instead_of_doing_nothing() {
         capture: false,
         seen: Rc::default(),
         next: Action::ExportJournal,
+        events: Rc::default(),
     });
     f.app.handle_key(key(KeyCode::Enter));
     assert_eq!(
@@ -309,7 +325,7 @@ fn rendering_never_panics_at_any_size() {
 }
 
 #[test]
-fn the_shipped_app_has_four_placeholder_tabs() {
+fn the_shipped_app_has_a_dice_tab_and_placeholders() {
     let dir = tempfile::tempdir().unwrap();
     let info = AppInfo {
         seed: 1,
@@ -317,7 +333,13 @@ fn the_shipped_app_has_four_placeholder_tabs() {
         warnings: vec![],
         data_dir: crate::storage::DataDir::resolve(Some(dir.path().to_path_buf())).unwrap(),
     };
-    let mut app = App::new(info, Box::new(TestClock(Rc::new(Cell::new(0)))));
+    let (store, _store_dir) = crate::tui::testkit::store();
+    let mut app = App::new(
+        info,
+        crate::tui::testkit::engine(&[]),
+        store,
+        Box::new(TestClock(Rc::new(Cell::new(0)))),
+    );
     assert!(screen(&app, 80, 24).contains("Oracle is not built yet"));
     app.handle_key(ch('4'));
     assert_eq!(app.active(), Some(TabId::Journal));
@@ -328,4 +350,204 @@ impl App {
     fn render_text_lacks_help(&self) -> bool {
         !screen(self, 80, 24).contains("Help")
     }
+}
+
+// ---- T7.2: roll plumbing with the real Dice tab ----
+
+struct DiceApp {
+    app: App,
+    journal_events: Rc<RefCell<Vec<TabEvent>>>,
+    store_path: std::path::PathBuf,
+    _dirs: (tempfile::TempDir, tempfile::TempDir),
+}
+
+/// Real Dice tab at index 2, stubs elsewhere; the Journal stub records events.
+fn dice_app(
+    script: &[u32],
+    store: Option<(crate::storage::JournalStore, tempfile::TempDir)>,
+) -> DiceApp {
+    let dir = tempfile::tempdir().unwrap();
+    let (store, store_dir) = store.unwrap_or_else(crate::tui::testkit::store);
+    let store_path = store.path().to_path_buf();
+    let journal_events: Rc<RefCell<Vec<TabEvent>>> = Rc::default();
+    let tabs: Vec<Box<dyn Tab>> = TabId::ALL
+        .iter()
+        .map(|id| -> Box<dyn Tab> {
+            if *id == TabId::Dice {
+                return Box::new(crate::tui::tabs::dice::DiceTab::new());
+            }
+            Box::new(Stub {
+                id: *id,
+                capture: false,
+                seen: Rc::default(),
+                next: Action::None,
+                events: if *id == TabId::Journal {
+                    journal_events.clone()
+                } else {
+                    Rc::default()
+                },
+            })
+        })
+        .collect();
+    let info = AppInfo {
+        seed: 7,
+        session: "t".into(),
+        warnings: vec![],
+        data_dir: crate::storage::DataDir::resolve(Some(dir.path().to_path_buf())).unwrap(),
+    };
+    let mut app = App::with_tabs(
+        info,
+        crate::tui::testkit::engine(script),
+        store,
+        Box::new(TestClock(Rc::new(Cell::new(100)))),
+        tabs,
+    );
+    app.handle_key(ch('3'));
+    DiceApp {
+        app,
+        journal_events,
+        store_path,
+        _dirs: (dir, store_dir),
+    }
+}
+
+fn type_and_enter(app: &mut App, text: &str) {
+    for c in text.chars() {
+        app.handle_key(ch(c));
+    }
+    app.handle_key(key(KeyCode::Enter));
+}
+
+fn journal_lines(path: &std::path::Path) -> usize {
+    std::fs::read_to_string(path).map_or(0, |t| t.lines().count())
+}
+
+#[test]
+fn q_in_dice_edit_is_text_not_quit() {
+    let mut d = dice_app(&[], None);
+    assert!(d.app.handle_key(ch('q')));
+    assert!(screen(&d.app, 80, 24).contains("Dice: q"));
+}
+
+#[test]
+fn q_in_browse_quits() {
+    let mut d = dice_app(&[], None);
+    d.app.handle_key(key(KeyCode::Esc));
+    assert!(!d.app.handle_key(ch('q')));
+}
+
+#[test]
+fn ctrl_c_in_dice_cancels_the_edit_then_quits() {
+    let mut d = dice_app(&[], None);
+    assert!(d.app.handle_key(ctrl_c()), "first Ctrl-C leaves the input");
+    assert!(!d.app.handle_key(ctrl_c()), "second one quits");
+}
+
+#[test]
+fn app_dice_invalid_does_not_append_journal() {
+    let mut d = dice_app(&[], None);
+    for bad in ["2d", "101d6", ""] {
+        type_and_enter(&mut d.app, bad);
+        let text = screen(&d.app, 80, 24);
+        assert!(text.contains("! "), "{bad:?}: {text}");
+        d.app.handle_key(ctrl_c()); // not quitting: a field is open? no, Esc via Ctrl-C
+        d.app.handle_key(ch('/'));
+    }
+    assert_eq!(journal_lines(&d.store_path), 0);
+    assert!(d.journal_events.borrow().is_empty());
+}
+
+#[test]
+fn app_roll_appends_entry_and_notifies_journal_tab() {
+    let mut d = dice_app(&[4, 2], None);
+    type_and_enter(&mut d.app, "2d6");
+    assert_eq!(journal_lines(&d.store_path), 1);
+    let events = d.journal_events.borrow();
+    assert!(
+        matches!(events.as_slice(), [TabEvent::JournalAppended(e)] if e.input == "2d6"),
+        "{events:?}"
+    );
+    drop(events);
+    let text = screen(&d.app, 80, 24);
+    assert!(
+        text.contains("2d6 =>"),
+        "history shows the CLI detail line: {text}"
+    );
+    assert!(text.contains("= 6"), "{text}");
+}
+
+#[test]
+fn dice_history_keeps_the_last_ten_newest_first() {
+    let mut d = dice_app(&[1; 12], None);
+    for _ in 0..12 {
+        d.app.handle_key(key(KeyCode::Enter));
+        if journal_lines(&d.store_path) == 0 {
+            type_and_enter(&mut d.app, "d6");
+        }
+    }
+    let text = screen(&d.app, 80, 24);
+    assert_eq!(text.matches("d6 =>").count(), 10, "{text}");
+}
+
+#[test]
+fn app_journal_write_failure_toasts_and_shows_entry() {
+    let dir = tempfile::tempdir().unwrap();
+    std::fs::write(dir.path().join("sessions"), "in the way").unwrap();
+    let store = crate::storage::JournalStore::new(dir.path().join("sessions").join("t.jsonl"));
+    let mut d = dice_app(&[3], Some((store, dir)));
+    type_and_enter(&mut d.app, "d6");
+    let text = screen(&d.app, 80, 24);
+    assert!(text.contains("journal write failed"), "{text}");
+    assert!(text.contains("d6 =>"), "the roll is still shown: {text}");
+    let events = d.journal_events.borrow();
+    assert!(events
+        .iter()
+        .any(|e| matches!(e, TabEvent::JournalWriteFailed(_))));
+    assert!(events
+        .iter()
+        .any(|e| matches!(e, TabEvent::JournalAppended(_))));
+}
+
+#[test]
+fn start_loads_the_journal_and_toasts_about_skipped_lines() {
+    let (store, store_dir) = crate::tui::testkit::store();
+    std::fs::create_dir_all(store.path().parent().unwrap()).unwrap();
+    let good = oraculum_core::journal::encode_line(&oraculum_core::journal::Entry::new(
+        1,
+        oraculum_core::journal::Kind::Note,
+        "",
+        "hi",
+        serde_json::Value::Null,
+    ))
+    .unwrap();
+    std::fs::write(store.path(), format!("{good}\nnot json\n")).unwrap();
+    let mut d = dice_app(&[], Some((store, store_dir)));
+    d.app.start();
+    let events = d.journal_events.borrow();
+    assert!(
+        matches!(events.as_slice(), [TabEvent::JournalLoaded(e, s)] if e.len() == 1 && s.len() == 1),
+        "{events:?}"
+    );
+    drop(events);
+    assert!(screen(&d.app, 80, 24).contains("1 malformed journal lines skipped"));
+}
+
+#[test]
+fn render_dice_60x20_shows_input_and_history() {
+    let mut d = dice_app(&[5], None);
+    type_and_enter(&mut d.app, "d6");
+    let text = screen(&d.app, 60, 20);
+    for needle in ["Dice: d6", "Last results", "d6 =>"] {
+        assert!(text.contains(needle), "{needle}: {text}");
+    }
+}
+
+#[test]
+fn same_script_gives_the_same_dice_output() {
+    let run = || {
+        let mut d = dice_app(&[3, 6, 2], None);
+        type_and_enter(&mut d.app, "3d6");
+        screen(&d.app, 80, 24)
+    };
+    assert_eq!(run(), run());
 }

@@ -7,6 +7,8 @@ pub mod event_loop;
 pub mod input;
 pub mod tabs;
 pub mod terminal;
+#[cfg(test)]
+pub mod testkit;
 pub mod theme;
 pub mod widgets;
 
