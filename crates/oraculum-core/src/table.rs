@@ -318,12 +318,13 @@ fn ranged_entries(dice: Option<String>, raw_entries: Vec<RawEntry>) -> Result<Bu
         ));
     }
 
+    // Sorted by `lo`, ties by file position, so overlap errors name the later entry.
+    entries.sort_by_key(|(i, e)| (e.lo, *i));
     match dice.totals() {
-        Totals::Contiguous { min, max } => check_contiguous(&mut entries, min, max)?,
+        Totals::Contiguous { min, max } => check_contiguous(&entries, min, max)?,
         Totals::D66 => check_d66(&entries)?,
     }
 
-    entries.sort_by_key(|(_, e)| e.lo);
     Ok((
         dice,
         TableForm::Ranged,
@@ -331,11 +332,7 @@ fn ranged_entries(dice: Option<String>, raw_entries: Vec<RawEntry>) -> Result<Bu
     ))
 }
 
-fn check_contiguous(
-    entries: &mut [(usize, TableEntry)],
-    min: i64,
-    max: i64,
-) -> Result<(), TableError> {
+fn check_contiguous(entries: &[(usize, TableEntry)], min: i64, max: i64) -> Result<(), TableError> {
     for (i, e) in entries.iter() {
         if e.lo < min || e.hi > max {
             return Err(TableError::OutOfRange {
@@ -347,7 +344,6 @@ fn check_contiguous(
             });
         }
     }
-    entries.sort_by_key(|(i, e)| (e.lo, *i));
     let mut next = min;
     for (i, e) in entries.iter() {
         if e.lo > next {
