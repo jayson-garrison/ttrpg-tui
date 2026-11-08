@@ -1,0 +1,23 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: multi-line template; the magic item is a nested generator alone on its last line (D-76).
+name = "Treasure"
+category = "Items"
+tags = ["treasure", "loot"]
+description = "A hoard: coins, one or two valuables, and sometimes a magic item."
+template = "Coins: {coins} coins\nValuables: {valuables}\n{item}"
+
+[[slots]]
+key = "coins"
+dice = "4d6"
+
+[[slots]]
+key = "valuables"
+table = "treasure_valuable"
+count = "1d2"
+distinct = true
+join = " and "
+
+[[slots]]
+key = "item"
+generator = "magic_item"
+chance = 25

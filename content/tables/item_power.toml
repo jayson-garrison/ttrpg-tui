@@ -1,0 +1,28 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: verb phrase, lowercase; reads after 'it'.
+name = "Item power"
+category = "Items"
+tags = ["item", "power"]
+description = "What it does."
+items = [
+  "never stays lost for long",
+  "keeps its owner dry in the rain",
+  "hums when danger is near",
+  "lights itself at dusk",
+  "always points toward home",
+  "makes its owner's voice carry",
+  "keeps food from spoiling",
+  "muffles footsteps",
+  "warms in the hand",
+  "reveals hidden writing",
+  "calms nearby animals",
+  "repairs small cracks overnight",
+  "sticks locks shut for everyone else",
+  "glows near lies",
+  "never tangles or rusts",
+  "lets its owner see in dim light",
+  "returns to the hand when dropped",
+  "makes water safe to drink",
+  "lets its owner understand birdsong",
+  "cannot be seen by those who are searching for it",
+]

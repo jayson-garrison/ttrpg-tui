@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun phrase with article, lowercase, no commas (one or two are joined).
+name = "Treasure valuable"
+category = "Items"
+tags = ["treasure", "valuable"]
+description = "A non-magical valuable."
+items = [
+  "a silver cup",
+  "a string of river pearls",
+  "a bundle of fine furs",
+  "a jeweled letter opener",
+  "a carved ivory comb",
+  "a small gold idol",
+  "an old bronze mirror",
+  "a sack of dyed silk",
+  "a bottle of rare perfume",
+  "a gilded book of songs",
+  "an embroidered banner",
+  "a set of silver spoons",
+]

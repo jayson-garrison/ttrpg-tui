@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: adjective phrase, lowercase.
+name = "Item quality"
+category = "Items"
+tags = ["item", "quality"]
+description = "Its condition and craft."
+items = [
+  "crudely made",
+  "well made",
+  "finely crafted",
+  "worn smooth",
+  "freshly polished",
+  "oddly warm",
+  "unusually light",
+  "cracked but sound",
+  "ornately carved",
+  "plain but sturdy",
+  "faintly glowing",
+  "covered in tiny marks",
+]

@@ -1,0 +1,17 @@
+---
+source: crates/oraculum-core/tests/builtin.rs
+expression: body
+---
+seed 1: Item: a belt buckle
+Material: bronze. Quality: worn smooth.
+Power: it repairs small cracks overnight.
+History: buried with a local hero.
+seed 2: Item: a wooden bowl
+Material: ash wood. Quality: finely crafted.
+Power: it never stays lost for long.
+History: buried with a local hero.
+seed 3: Item: a sewing kit
+Material: silver. Quality: cracked but sound.
+Power: it calms nearby animals.
+History: stolen twice already.
+Drawback: it fades the owner's memory of recent days.
