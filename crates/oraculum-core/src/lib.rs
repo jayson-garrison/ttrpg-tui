@@ -4,5 +4,8 @@
 
 pub mod clock;
 pub mod dice;
+pub mod error;
 pub mod oracle;
 pub mod rng;
+pub mod table;
+pub mod template;
