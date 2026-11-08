@@ -26,3 +26,8 @@ pub fn warning() -> Style {
 pub fn ok() -> Style {
     Style::new().fg(Color::Green)
 }
+
+/// Text that came from a generator slot.
+pub fn slot() -> Style {
+    Style::new().add_modifier(Modifier::BOLD | Modifier::UNDERLINED)
+}

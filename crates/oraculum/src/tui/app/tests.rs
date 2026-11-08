@@ -340,7 +340,9 @@ fn the_shipped_app_has_a_dice_tab_and_placeholders() {
         store,
         Box::new(TestClock(Rc::new(Cell::new(0)))),
     );
-    assert!(screen(&app, 80, 24).contains("Oracle is not built yet"));
+    assert!(screen(&app, 80, 24).contains("Press Enter to ask."));
+    app.handle_key(ch('2'));
+    assert!(screen(&app, 80, 24).contains("Library is not built yet"));
     app.handle_key(ch('4'));
     assert_eq!(app.active(), Some(TabId::Journal));
 }
@@ -565,4 +567,71 @@ fn resize_down_and_back_up_redraws_without_panic() {
         screen(&f.app, 80, 24).contains("Help"),
         "help survives a resize"
     );
+}
+
+// ---- T8.1: Oracle through the App ----
+
+fn oracle_app(script: &[u32], dice: bool) -> (App, std::path::PathBuf, [tempfile::TempDir; 2]) {
+    let dir = tempfile::tempdir().unwrap();
+    let (store, store_dir) = crate::tui::testkit::store();
+    let path = store.path().to_path_buf();
+    let info = AppInfo {
+        seed: 7,
+        session: "t".into(),
+        warnings: vec![],
+        data_dir: crate::storage::DataDir::resolve(Some(dir.path().to_path_buf())).unwrap(),
+    };
+    let engine = if dice {
+        crate::tui::testkit::engine(script)
+    } else {
+        crate::tui::testkit::empty_engine(script)
+    };
+    let app = App::new(
+        info,
+        engine,
+        store,
+        Box::new(TestClock(Rc::new(Cell::new(0)))),
+    );
+    (app, path, [dir, store_dir])
+}
+
+#[test]
+fn oracle_enter_rolls_shows_the_answer_and_journals_one_entry() {
+    let (mut app, path, _keep) = oracle_app(&[22, 2], true);
+    app.handle_key(key(KeyCode::Right));
+    app.handle_key(key(KeyCode::Enter));
+    let s = screen(&app, 80, 24);
+    assert!(s.contains("Yes") && s.contains("d100: 22"), "{s}");
+    assert!(s.contains("Twist:") && s.contains("beta"), "{s}");
+    assert_eq!(journal_lines(&path), 1);
+}
+
+#[test]
+fn oracle_t_toasts_until_the_library_exists() {
+    let (mut app, _path, _keep) = oracle_app(&[], true);
+    app.handle_key(ch('t'));
+    assert_eq!(
+        app.toast().map(|t| t.text.as_str()),
+        Some("Library not available yet")
+    );
+}
+
+#[test]
+fn oracle_question_text_is_not_a_global_key() {
+    let (mut app, _path, _keep) = oracle_app(&[], true);
+    app.handle_key(ch('/'));
+    for c in "q1?".chars() {
+        app.handle_key(ch(c));
+    }
+    assert_eq!(app.active(), Some(TabId::Oracle));
+    assert!(screen(&app, 80, 24).contains("Question: q1?"));
+}
+
+#[test]
+fn oracle_with_no_event_generator_still_answers() {
+    let (mut app, path, _keep) = oracle_app(&[33], false);
+    app.handle_key(key(KeyCode::Enter));
+    let s = screen(&app, 80, 24);
+    assert!(s.contains("Twist unavailable: event is missing"), "{s}");
+    assert_eq!(journal_lines(&path), 1);
 }
