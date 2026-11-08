@@ -135,3 +135,5 @@ Records where `docs/DESIGN.md` (the spec) is ambiguous, silent, or internally in
 **D-65 Early originality packet. [human-confirmed, HAG-3]** *Decision:* Rick prepares a first review packet for the human after the first five generators (extends D-46).
 
 **D-66 TUI order. [human-confirmed, HAG-3]** *Decision:* T7 Dice, T8 Oracle and Journal, T9 Library.
+
+**D-67 Catalog details (T4). [refines A§3.8]** *Decisions:* (1) Removing a user item removes every user layer of that (kind, id) and restores the built-in beneath, which is then re-validated; removing a built-in drops the key. (2) Nesting depth is measured over same-kind references only (generator chains and table chains separately, D-16); an over-deep node is handled user-first: user items at or below it are removed, otherwise the node itself. (3) A generator removed for a missing reference is remembered with the missing id, so an oracle twist can name it (A§3.4); `TwistSource for Catalog` uses this. (4) A leading BOM in a source is ignored. (5) `WarningKind::FileUnreadable` / `FileTooLarge` are added with the storage layer in T5, since core does no file I/O.

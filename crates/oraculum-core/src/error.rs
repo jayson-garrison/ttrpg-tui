@@ -10,6 +10,8 @@ pub enum EvalError {
     UnknownTable(String),
     #[error("unknown generator {0:?}")]
     UnknownGenerator(String),
+    #[error("generator has no slot number {0}")]
+    UnknownSlot(usize),
     #[error("references nested deeper than {max} levels")]
     DepthExceeded { max: usize },
     #[error("table {table:?} has no entry for total {total}")]
