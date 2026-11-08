@@ -1,0 +1,31 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: multi-line template, all slots mandatory.
+name = "Faction"
+category = "Organizations"
+tags = ["faction", "group"]
+description = "A group with a theme, a goal, a method, resources and a leader."
+template = "Faction: {form}, devoted to {theme}.\nGoal: {goal}. Method: {method}.\nResources: {resource}.\nLeader: {leader}"
+
+[[slots]]
+key = "form"
+table = "faction_form"
+
+[[slots]]
+key = "theme"
+table = "faction_theme"
+
+[[slots]]
+key = "goal"
+table = "faction_goal"
+
+[[slots]]
+key = "method"
+table = "faction_method"
+
+[[slots]]
+key = "resource"
+table = "faction_resource"
+
+[[slots]]
+key = "leader"
+generator = "npc"

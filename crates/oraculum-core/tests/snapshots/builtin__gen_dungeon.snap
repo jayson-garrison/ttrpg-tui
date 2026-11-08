@@ -7,7 +7,7 @@ Entrance: a trapdoor in a ruined chapel
 Inhabitants: a stubborn caretaker and giant rats
 Hazard: Triggered by any sound above a whisper: a hidden spring douses every light in the room. Warning sign: unnaturally quiet air. Danger: a nuisance.
 Treasure:
-Coins: 21 coins
+Purse: 21 coins
 Valuables: a small gold idol and an embroidered banner
 Rooms:
 - Room (L-shaped, quiet and watchful): a collapsed ceiling corner; contents: a locked chest; exits: a spiral stair going down, a barred gate.
@@ -20,10 +20,10 @@ Entrance: a hidden door behind a waterfall
 Inhabitants: a stubborn caretaker and a clan of scavengers
 Hazard: Triggered by a lit flame: a pressure plate releases a swarm of angry insects. Warning sign: unnaturally quiet air. Danger: dangerous.
 Treasure:
-Coins: 17 coins
+Purse: 17 coins
 Valuables: a gilded book of songs and a bottle of rare perfume
-Item: a brass key
-Material: oak. Quality: cracked but sound.
+Item: a brass key, trimmed with oak.
+Quality: cracked but sound.
 Power: it makes water safe to drink.
 History: traded for a debt.
 Rooms:
@@ -36,10 +36,10 @@ seed 3: Dungeon: a buried vault, left behind by a flood, rumored empty.
 Entrance: a tunnel mouth half covered by brambles
 Inhabitants: bats by the thousand and a stubborn caretaker
 Treasure:
-Coins: 8 coins
+Purse: 8 coins
 Valuables: a string of river pearls
-Item: a walking staff
-Material: blackened iron. Quality: covered in tiny marks.
+Item: a walking staff, trimmed with blackened iron.
+Quality: covered in tiny marks.
 Power: it sticks locks shut for everyone else.
 History: won in a card game.
 Rooms:

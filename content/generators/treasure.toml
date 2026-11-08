@@ -4,7 +4,7 @@ name = "Treasure"
 category = "Items"
 tags = ["treasure", "loot"]
 description = "A hoard: coins, one or two valuables, and sometimes a magic item."
-template = "Coins: {coins} coins\nValuables: {valuables}\n{item}"
+template = "Purse: {coins} coins\nValuables: {valuables}\n{item}"
 
 [[slots]]
 key = "coins"

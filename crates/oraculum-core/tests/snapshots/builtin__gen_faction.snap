@@ -1,0 +1,16 @@
+---
+source: crates/oraculum-core/tests/builtin.rs
+expression: body
+---
+seed 1: Faction: a band of outlaws, devoted to protecting old roads.
+Goal: to expand into the next valley. Method: gossip and whispers.
+Resources: a rich patron.
+Leader: Ulric Ridgeway, chimney sweep (barely adult): tall with a stooped back. Seems prone to boasting and overly polite. Wants to make one last good trade.
+seed 2: Faction: a band of outlaws, devoted to smuggling honest goods.
+Goal: to protect a secret. Method: bribes and favors.
+Resources: a rich patron.
+Leader: Brisa Ivywood, copyist (young and restless): a hat pulled low. Seems fond of old songs and blunt without meaning harm. Wants to buy a plot of land.
+seed 3: Faction: a scholars' society, devoted to guarding a single holy spring.
+Goal: to end a long feud. Method: hospitality and marriage ties.
+Resources: skilled craftspeople.
+Leader: Arvenne Hollowell, ferry pilot (barely adult): weathered and sun-darkened. Seems nervous around animals and careful with every coin. Wants to learn a closely guarded craft.

@@ -2,14 +2,14 @@
 source: crates/oraculum-core/tests/builtin.rs
 expression: body
 ---
-seed 1: Coins: 10 coins
+seed 1: Purse: 10 coins
 Valuables: a bundle of fine furs
-seed 2: Coins: 13 coins
+seed 2: Purse: 13 coins
 Valuables: a silver cup
-seed 3: Coins: 14 coins
+seed 3: Purse: 14 coins
 Valuables: an old bronze mirror and a carved ivory comb
-Item: a wooden bowl
-Material: bronze. Quality: crudely made.
+Item: a wooden bowl, trimmed with bronze.
+Quality: crudely made.
 Power: it sticks locks shut for everyone else.
 History: passed down through three owners.
 Drawback: it refuses to work for the greedy.

@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: gerund phrase, lowercase; reads after 'devoted to'.
+name = "Faction theme"
+category = "Organizations"
+tags = ["faction", "theme"]
+description = "What it cares about."
+items = [
+  "protecting old roads",
+  "collecting forgotten debts",
+  "preserving old songs",
+  "controlling the grain trade",
+  "guarding a single holy spring",
+  "mapping every cave",
+  "hunting one particular beast",
+  "keeping the peace by any means",
+  "spreading a new faith",
+  "reviving a lost craft",
+  "watching the border",
+  "smuggling honest goods",
+]
