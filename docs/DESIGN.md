@@ -189,7 +189,7 @@ Slot fields:
 Evaluation:
 
 - Slots resolve in declaration order and are independent of one another.
-- Templates substitute `{key}`; a template may also use `{roll:expr}` and `{{`/`}}`.
+- Templates substitute `{key}`; a template may also use `{roll:expr}` and `{{`/`}}`. A template line whose placeholders all render empty (for example an absent optional slot) is dropped with its newline (D-76).
 - Nested generators have a depth limit of 5 and are checked for cycles at load time.
 - Load-time validation: every referenced table/generator exists; every template placeholder has a slot; unused slots produce a warning; invalid dice expressions are errors. A generator that fails validation is excluded with a warning.
 - The result is structured: `{ id, text, slots: [{ key, source, values, detail }] }`. This lets the UI re-roll a single slot and re-render the template without re-rolling the rest.

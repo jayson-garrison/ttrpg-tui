@@ -57,6 +57,8 @@ All 15 exist and are built from the tables in section 5. Category and slot recip
 
 Deepest nesting is `dungeon` => `treasure` => `magic_item` (depth 2), far below the limit of 5.
 
+Optional slots (any slot with `chance < 100`: `npc_secret`, `item_drawback`, `wild_resident`, `dungeon.hazard`, `tavern.rumor`, `encounter.twist`, `treasure.magic_item`, `quest`/others if added) are written **on a line of their own**, with their label on the same line, e.g. `Rumor: {rumor}`. When every placeholder on a template line renders empty, the line (and its newline) is dropped (D-76). Never put an optional slot on a line shared with a mandatory slot, and never use an optional slot mid-sentence.
+
 ## 4. Originality and tone rules (Spec §3, D-46)
 
 These are rules for the author, enforced where a machine can enforce them and by the human sign-off where it cannot.
