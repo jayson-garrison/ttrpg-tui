@@ -4,7 +4,7 @@ name = "Magic item"
 category = "Items"
 tags = ["item", "magic"]
 description = "A magic item with a base, make, power, history and sometimes a drawback."
-template = "Item: {base}\nMaterial: {material}. Quality: {quality}.\nPower: it {power}.\nHistory: {history}.\nDrawback: it {drawback}."
+template = "Item: {base}, trimmed with {material}.\nQuality: {quality}.\nPower: it {power}.\nHistory: {history}.\nDrawback: it {drawback}."
 
 [[slots]]
 key = "base"

@@ -1,5 +1,5 @@
 # Written for Oraculum. Original: not copied or adapted from any published table,
-# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun or noun phrase, lowercase, no article.
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun, lowercase, no article; reads after 'trimmed with'.
 name = "Item material"
 category = "Items"
 tags = ["item", "material"]
@@ -11,10 +11,10 @@ items = [
   "blackened iron",
   "silver",
   "glass",
-  "woven reed",
+  "reed",
   "leather",
   "amber",
   "slate",
-  "copper wire",
+  "copper",
   "ash wood",
 ]
