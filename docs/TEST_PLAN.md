@@ -38,7 +38,31 @@ Maps [DESIGN.md](DESIGN.md) section 9 to test layers and tools. QA owns this fil
 | No `unwrap`/`expect` in non-test code | Clippy lints `clippy::unwrap_used`, `clippy::expect_used` denied at crate level, with `#![cfg_attr(test, allow(...))]`; reviewer grep per CONTRIBUTING.md |
 | No C deps, no async/network | Reviewer checks `Cargo.lock` diffs; optional `cargo-deny` ban list later |
 | Core does no I/O | `oraculum-core` has no `std::fs`/`std::io` use; reviewed per PR |
-| Original built-in content | Manual review per content PR |
+| Original built-in content | Denylist lint + QA wording review per content PR + originality packet (see Built-in content) |
+
+## Built-in content (T6)
+
+Source of truth: [T6_PLAN.md](T6_PLAN.md). Content tests live in `crates/oraculum-core/tests/builtin.rs`; no other test asserts built-in text (D-72).
+
+### Denylist lint design
+
+- `tests/data/denylist.txt`: one term per line, `#` comments, lowercase. Matching is case-insensitive, whole word (ASCII word boundaries), also applied to the table/generator `name`, `description` and `tags`, not only entries.
+- Seed list (extend freely): names of published games, settings and bestiary monsters named in T6_PLAN rule 2, plus brands, real-world nations, religions and slurs QA adds. QA owns additions; the lint never prints a matched slur in CI logs beyond the file and line.
+- Negative tests (must exist): a fixture containing a denylisted word is rejected; one with a non-ASCII character is rejected; one with `{` is rejected; an empty or missing denylist file fails the test. This stops the lint from silently becoming a no-op.
+- The lint is a safety net, not proof of originality (T6_PLAN rule 6).
+
+### Originality review packet (D-46, D-65)
+
+QA assembles it **after T6.3** (first five generators: `event`, `npc`, `rumor`, `trap`, `creature`) and again before the T6.8 sign-off. Contents:
+
+1. File list with header author line and git commit for each table/generator.
+2. The three oracle tables (`event_focus`, `meaning_action`, `meaning_subject`) in full, reviewed first.
+3. Insta snapshot output (seeds 1..3) and 20 rendered samples per generator.
+4. Denylist result and the seed-sweep result (0..500).
+5. QA's own wording check of **every** table against the spec's 'original, not copied' rule: any entry that reads like a known published table, product or setting is listed with the reason; the rest are marked reviewed with the PR number in `content/PROVENANCE.md`.
+6. Open questions for the human. The human's sign-off line (reviewer, date, commit) in `content/PROVENANCE.md` is the release gate.
+
+QA cannot prove originality; the packet shows what was checked and what was not.
 
 ## CI
 
