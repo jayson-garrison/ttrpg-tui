@@ -13,6 +13,7 @@ File stem == id. Every file is listed in `crates/oraculum-core/src/builtin.rs` (
 5. Tables used with `count > 1` contain no commas.
 6. `category` is one of Characters, Creatures, Places, Sites, Adventure, Items, Organizations, Oracle. `tags`: 1-3 lowercase words.
 7. Every table is used by at least one generator.
+8. American spelling throughout (color, favor, traveling, behavior).
 
 ## Optional slots (chance below 100)
 
