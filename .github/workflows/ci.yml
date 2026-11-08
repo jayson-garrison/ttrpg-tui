@@ -44,6 +44,12 @@ jobs:
         if: steps.cargo.outputs.present == 'true'
         run: cargo clippy --workspace --all-targets -- -D warnings
 
+      - name: deny (bans)
+        if: steps.cargo.outputs.present == 'true' && matrix.os == 'ubuntu-latest'
+        uses: EmbarkStudios/cargo-deny-action@v2
+        with:
+          command: check bans
+
       - name: build
         if: steps.cargo.outputs.present == 'true'
         run: cargo build --workspace --all-targets
