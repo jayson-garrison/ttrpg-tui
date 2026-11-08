@@ -8,7 +8,7 @@ use ratatui::layout::Rect;
 use ratatui::Terminal;
 
 use super::*;
-use crate::tui::action::{LibraryTarget, TabEvent};
+use crate::tui::action::TabEvent;
 
 struct TestClock(Rc<Cell<u64>>);
 impl Clock for TestClock {
@@ -255,23 +255,6 @@ fn toast_expires_after_three_seconds_with_a_fixed_clock() {
 }
 
 #[test]
-fn not_yet_built_actions_toast_instead_of_doing_nothing() {
-    let mut f = fixture(&[], 0);
-    f.app.tabs[0] = Box::new(Stub {
-        id: TabId::Oracle,
-        capture: false,
-        seen: Rc::default(),
-        next: Action::OpenInLibrary(LibraryTarget::Category("x".into())),
-        events: Rc::default(),
-    });
-    f.app.handle_key(key(KeyCode::Enter));
-    assert_eq!(
-        f.app.toast().map(|t| t.text.as_str()),
-        Some("Library not available yet")
-    );
-}
-
-#[test]
 fn render_tab_bar_shows_four_tabs_seed_and_warnings() {
     let f = fixture(&[], 2);
     let text = screen(&f.app, 80, 24);
@@ -325,7 +308,7 @@ fn rendering_never_panics_at_any_size() {
 }
 
 #[test]
-fn the_shipped_app_has_a_dice_tab_and_placeholders() {
+fn the_shipped_app_has_all_four_tabs() {
     let dir = tempfile::tempdir().unwrap();
     let info = AppInfo {
         seed: 1,
@@ -342,7 +325,7 @@ fn the_shipped_app_has_a_dice_tab_and_placeholders() {
     );
     assert!(screen(&app, 80, 24).contains("Press Enter to ask."));
     app.handle_key(ch('2'));
-    assert!(screen(&app, 80, 24).contains("Library is not built yet"));
+    assert!(screen(&app, 80, 24).contains("T colors"));
     app.handle_key(ch('4'));
     assert_eq!(app.active(), Some(TabId::Journal));
     assert!(screen(&app, 80, 24).contains("No entries yet"));
@@ -608,13 +591,26 @@ fn oracle_enter_rolls_shows_the_answer_and_journals_one_entry() {
 }
 
 #[test]
-fn oracle_t_toasts_until_the_library_exists() {
+fn oracle_t_opens_library_on_the_oracle_category() {
     let (mut app, _path, _keep) = oracle_app(&[], true);
     app.handle_key(ch('t'));
-    assert_eq!(
-        app.toast().map(|t| t.text.as_str()),
-        Some("Library not available yet")
-    );
+    assert_eq!(app.active(), Some(TabId::Library));
+    let s = screen(&app, 80, 24);
+    assert!(s.contains("[Oracle]") && s.contains("G event"), "{s}");
+    assert!(!s.contains("T colors"), "{s}");
+}
+
+#[test]
+fn library_enter_rolls_journals_and_repeats() {
+    let (mut app, path, _keep) = oracle_app(&[2, 3], true);
+    app.handle_key(ch('2'));
+    app.handle_key(key(KeyCode::Enter));
+    let s = screen(&app, 100, 24);
+    assert!(s.contains("green"), "{s}");
+    assert_eq!(journal_lines(&path), 1);
+    app.handle_key(ch('r'));
+    assert!(screen(&app, 100, 24).contains("blue"));
+    assert_eq!(journal_lines(&path), 2);
 }
 
 #[test]

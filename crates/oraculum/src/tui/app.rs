@@ -11,8 +11,8 @@ use ratatui::Frame;
 use super::action::{Action, AppInfo, RollRequest, Tab, TabEvent, TabId, Toast};
 use super::tabs::dice::DiceTab;
 use super::tabs::journal::JournalTab;
+use super::tabs::library::LibraryTab;
 use super::tabs::oracle::OracleTab;
-use super::tabs::placeholder::PlaceholderTab;
 use super::widgets::{help, status_line, tab_bar, too_small};
 use crate::storage::{write_export, JournalStore};
 
@@ -31,11 +31,11 @@ pub struct App {
 }
 
 impl App {
-    /// The shipped app. Oracle, Library and Journal are placeholders until T8 and T9.
+    /// The shipped app: Oracle, Library, Dice, Journal.
     pub fn new(info: AppInfo, engine: Engine, store: JournalStore, clock: Box<dyn Clock>) -> App {
         let tabs: Vec<Box<dyn Tab>> = vec![
             Box::new(OracleTab::new()),
-            Box::new(PlaceholderTab::new(TabId::Library, "Library")),
+            Box::new(LibraryTab::new(engine.catalog().clone())),
             Box::new(DiceTab::new()),
             Box::new(JournalTab::new()),
         ];
@@ -190,7 +190,10 @@ impl App {
                 self.send(TabId::Journal, &TabEvent::JournalAppended(entry));
             }
             Action::ExportJournal => self.export(),
-            Action::OpenInLibrary(_) => self.show_toast(Toast::info("Library not available yet")),
+            Action::OpenInLibrary(target) => {
+                self.execute(Action::SwitchTab(TabId::Library));
+                self.send(TabId::Library, &TabEvent::Focus(target));
+            }
         }
         true
     }

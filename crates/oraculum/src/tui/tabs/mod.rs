@@ -1,6 +1,6 @@
-//! The four tabs. T7.1 ships placeholders; each later PR replaces one.
+//! The four tabs. One module per tab.
 
 pub mod dice;
 pub mod journal;
+pub mod library;
 pub mod oracle;
-pub mod placeholder;

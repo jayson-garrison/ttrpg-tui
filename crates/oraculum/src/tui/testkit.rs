@@ -30,7 +30,11 @@ fn generator(id: &str, category: &str, body: &str) -> Source {
 /// `bad_ref` that produces one loader warning.
 pub fn fixture_catalog() -> (Catalog, Vec<LoadWarning>) {
     let builtin = vec![
-        table("colors", "Alpha", "items = [\"red\", \"green\", \"blue\"]"),
+        table(
+            "colors",
+            "Alpha",
+            "tags = [\"hue\"]\nitems = [\"red\", \"green\", \"blue\"]",
+        ),
         table(
             "loot",
             "Alpha",
