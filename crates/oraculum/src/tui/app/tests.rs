@@ -8,7 +8,7 @@ use ratatui::layout::Rect;
 use ratatui::Terminal;
 
 use super::*;
-use crate::tui::action::TabEvent;
+use crate::tui::action::{LibraryTarget, TabEvent};
 
 struct TestClock(Rc<Cell<u64>>);
 impl Clock for TestClock {
@@ -261,13 +261,13 @@ fn not_yet_built_actions_toast_instead_of_doing_nothing() {
         id: TabId::Oracle,
         capture: false,
         seen: Rc::default(),
-        next: Action::ExportJournal,
+        next: Action::OpenInLibrary(LibraryTarget::Category("x".into())),
         events: Rc::default(),
     });
     f.app.handle_key(key(KeyCode::Enter));
     assert_eq!(
         f.app.toast().map(|t| t.text.as_str()),
-        Some("not available yet")
+        Some("Library not available yet")
     );
 }
 
@@ -345,6 +345,7 @@ fn the_shipped_app_has_a_dice_tab_and_placeholders() {
     assert!(screen(&app, 80, 24).contains("Library is not built yet"));
     app.handle_key(ch('4'));
     assert_eq!(app.active(), Some(TabId::Journal));
+    assert!(screen(&app, 80, 24).contains("No entries yet"));
 }
 
 impl App {
@@ -634,4 +635,90 @@ fn oracle_with_no_event_generator_still_answers() {
     let s = screen(&app, 80, 24);
     assert!(s.contains("Twist unavailable: event is missing"), "{s}");
     assert_eq!(journal_lines(&path), 1);
+}
+
+// ---- T8.2: Journal through the App ----
+
+fn data_app(
+    script: &[u32],
+) -> (
+    App,
+    std::path::PathBuf,
+    std::path::PathBuf,
+    [tempfile::TempDir; 2],
+) {
+    let dir = tempfile::tempdir().unwrap();
+    let data_dir = crate::storage::DataDir::resolve(Some(dir.path().to_path_buf())).unwrap();
+    let export = data_dir.export_path();
+    let (store, store_dir) = crate::tui::testkit::store();
+    let path = store.path().to_path_buf();
+    let info = AppInfo {
+        seed: 7,
+        session: "t".into(),
+        warnings: vec![],
+        data_dir,
+    };
+    let app = App::new(
+        info,
+        crate::tui::testkit::engine(script),
+        store,
+        Box::new(TestClock(Rc::new(Cell::new(100)))),
+    );
+    (app, path, export, [dir, store_dir])
+}
+
+#[test]
+fn n_adds_a_note_that_appears_live_and_is_journaled() {
+    let (mut app, path, _export, _keep) = data_app(&[]);
+    app.handle_key(ch('4'));
+    app.handle_key(ch('n'));
+    type_and_enter(&mut app, "met the baron");
+    assert!(screen(&app, 80, 24).contains("note  met the baron"));
+    let text = std::fs::read_to_string(&path).unwrap();
+    assert_eq!(text.lines().count(), 1);
+    assert!(
+        text.contains("\"kind\":\"note\"") && text.contains("met the baron"),
+        "{text}"
+    );
+}
+
+#[test]
+fn rolls_from_other_tabs_appear_in_the_journal_tab() {
+    let (mut app, _path, _export, _keep) = data_app(&[4, 5]);
+    app.handle_key(ch('3'));
+    type_and_enter(&mut app, "2d6");
+    app.handle_key(key(KeyCode::Esc));
+    app.handle_key(ch('4'));
+    assert!(screen(&app, 80, 24).contains("dice  2d6 -> "));
+}
+
+#[test]
+fn x_writes_export_md_equal_to_the_cli_export_and_toasts_the_path() {
+    let (mut app, path, export, _keep) = data_app(&[4, 5]);
+    app.handle_key(ch('3'));
+    type_and_enter(&mut app, "2d6");
+    app.handle_key(key(KeyCode::Esc));
+    app.handle_key(ch('4'));
+    app.handle_key(ch('n'));
+    type_and_enter(&mut app, "hello");
+    app.handle_key(ch('x'));
+    let toast = app.toast().map(|t| t.text.clone()).unwrap_or_default();
+    assert!(toast.contains(&export.display().to_string()), "{toast}");
+    let load = crate::storage::JournalStore::new(path).load().unwrap();
+    assert_eq!(load.entries.len(), 2);
+    assert_eq!(
+        std::fs::read_to_string(&export).unwrap(),
+        oraculum_core::journal::export_markdown("t", &load.entries)
+    );
+}
+
+#[test]
+fn x_on_an_empty_journal_still_exports_the_heading() {
+    let (mut app, _path, export, _keep) = data_app(&[]);
+    app.handle_key(ch('4'));
+    app.handle_key(ch('x'));
+    assert!(export.exists());
+    assert!(app
+        .toast()
+        .is_some_and(|t| t.text.starts_with("exported to ")));
 }
