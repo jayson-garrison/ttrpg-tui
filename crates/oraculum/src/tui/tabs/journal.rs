@@ -206,6 +206,7 @@ impl Tab for JournalTab {
             ("n", "note"),
             ("x", "export"),
             ("\u{2191}/\u{2193} PgUp/PgDn", "scroll"),
+            ("Home/End", "first / last"),
         ]
     }
 }

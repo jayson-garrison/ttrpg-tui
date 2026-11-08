@@ -199,9 +199,10 @@ impl Tab for OracleTab {
 
     fn help(&self) -> &'static [(&'static str, &'static str)] {
         &[
-            ("\u{2190}/\u{2192}", "likelihood"),
+            ("\u{2190}/\u{2192} h/l", "likelihood"),
             ("/", "question"),
             ("Enter", "ask"),
+            ("Esc", "end question"),
             ("t", "library"),
         ]
     }
