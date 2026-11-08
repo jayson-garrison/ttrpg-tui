@@ -8,9 +8,12 @@ use clap::Parser;
 use oraculum_app::cli::{run, Cli, Env};
 use oraculum_app::clock::SystemClock;
 use oraculum_app::error::AppError;
-use oraculum_app::storage::{DataDir, SessionName};
+use oraculum_app::storage::{DataDir, JournalStore, SessionName};
 use oraculum_app::tui::action::AppInfo;
 use oraculum_app::tui::App;
+use oraculum_core::engine::Engine;
+use oraculum_core::rng::RngRoller;
+use std::rc::Rc;
 
 fn main() -> ExitCode {
     match real_main() {
@@ -74,15 +77,22 @@ fn run_tui(cli: &Cli) -> anyhow::Result<ExitCode> {
         Err(e) => return fail(&AppError::from(e)),
     };
     let seed = cli.seed.unwrap_or_else(rand::random);
-    let (_catalog, warnings) =
+    let (catalog, warnings) =
         oraculum_app::cli::build_catalog(&data_dir, &oraculum_core::builtin::sources());
+    let store = JournalStore::new(data_dir.session_path(&session));
+    let engine = Engine::new(
+        Rc::new(catalog),
+        Box::new(RngRoller::from_seed(seed)),
+        Box::new(SystemClock),
+    );
     let info = AppInfo {
         seed,
         session: session.as_str().to_string(),
         warnings,
         data_dir,
     };
-    let app = App::new(info, Box::new(SystemClock));
+    let mut app = App::new(info, engine, store, Box::new(SystemClock));
+    app.start();
     oraculum_app::tui::run(app).context("terminal error")?;
     Ok(ExitCode::SUCCESS)
 }

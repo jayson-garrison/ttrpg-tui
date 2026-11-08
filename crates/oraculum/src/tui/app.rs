@@ -3,18 +3,23 @@
 
 use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 use oraculum_core::clock::Clock;
+use oraculum_core::engine::{Engine, Rolled};
 use ratatui::layout::{Constraint, Layout};
 use ratatui::Frame;
 
-use super::action::{Action, AppInfo, Tab, TabId, Toast};
+use super::action::{Action, AppInfo, RollRequest, Tab, TabEvent, TabId, Toast};
+use super::tabs::dice::DiceTab;
 use super::tabs::placeholder::PlaceholderTab;
 use super::widgets::{help, status_line, tab_bar, too_small};
+use crate::storage::JournalStore;
 
 /// How long a toast stays, in seconds (D-80).
 const TOAST_SECONDS: u64 = 3;
 
 pub struct App {
     info: AppInfo,
+    engine: Engine,
+    store: JournalStore,
     clock: Box<dyn Clock>,
     tabs: Vec<Box<dyn Tab>>,
     active: usize,
@@ -23,25 +28,58 @@ pub struct App {
 }
 
 impl App {
-    /// The shipped app. Tabs are placeholders until T7.2 to T9.
-    pub fn new(info: AppInfo, clock: Box<dyn Clock>) -> App {
+    /// The shipped app. Oracle, Library and Journal are placeholders until T8 and T9.
+    pub fn new(info: AppInfo, engine: Engine, store: JournalStore, clock: Box<dyn Clock>) -> App {
         let tabs: Vec<Box<dyn Tab>> = vec![
             Box::new(PlaceholderTab::new(TabId::Oracle, "Oracle")),
             Box::new(PlaceholderTab::new(TabId::Library, "Library")),
-            Box::new(PlaceholderTab::new(TabId::Dice, "Dice")),
+            Box::new(DiceTab::new()),
             Box::new(PlaceholderTab::new(TabId::Journal, "Journal")),
         ];
-        App::with_tabs(info, clock, tabs)
+        App::with_tabs(info, engine, store, clock, tabs)
     }
 
-    pub fn with_tabs(info: AppInfo, clock: Box<dyn Clock>, tabs: Vec<Box<dyn Tab>>) -> App {
+    pub fn with_tabs(
+        info: AppInfo,
+        engine: Engine,
+        store: JournalStore,
+        clock: Box<dyn Clock>,
+        tabs: Vec<Box<dyn Tab>>,
+    ) -> App {
         App {
             info,
+            engine,
+            store,
             clock,
             tabs,
             active: 0,
             toast: None,
             help_open: false,
+        }
+    }
+
+    /// Load the session journal into the Journal tab and report damage (D-81).
+    pub fn start(&mut self) {
+        match self.store.load() {
+            Ok(load) => {
+                let skipped = load.skipped.len();
+                self.send(
+                    TabId::Journal,
+                    &TabEvent::JournalLoaded(load.entries, load.skipped),
+                );
+                if skipped > 0 {
+                    self.show_toast(Toast::error(format!(
+                        "{skipped} malformed journal lines skipped"
+                    )));
+                }
+            }
+            Err(e) => self.show_toast(Toast::error(format!("cannot read journal: {e}"))),
+        }
+    }
+
+    fn send(&mut self, to: TabId, ev: &TabEvent) {
+        if let Some(tab) = self.tabs.iter_mut().find(|t| t.id() == to) {
+            tab.on_event(ev);
         }
     }
 
@@ -142,13 +180,49 @@ impl App {
                 }
             }
             Action::Toast(t) => self.show_toast(t),
-            // Rolling, notes, export and Library jumps arrive with T7.2 to T9.
-            Action::Roll(_)
-            | Action::AppendNote(_)
-            | Action::ExportJournal
-            | Action::OpenInLibrary(_) => self.show_toast(Toast::info("not available yet")),
+            Action::Roll(request) => self.roll(request),
+            // Notes, export and Library jumps arrive with T8 and T9.
+            Action::AppendNote(_) | Action::ExportJournal | Action::OpenInLibrary(_) => {
+                self.show_toast(Toast::info("not available yet"))
+            }
         }
         true
+    }
+
+    /// Run a roll request, journal it, and tell the tab that asked and the
+    /// Journal tab. A write failure keeps the entry on screen (A§5.4).
+    fn roll(&mut self, request: RollRequest) {
+        let origin = self.tabs.get(self.active).map(|t| t.id());
+        let outcome: Result<Rolled, String> = match request {
+            RollRequest::Dice { expr } => self
+                .engine
+                .roll_dice(&expr)
+                .map_err(|e| format!("bad dice expression: {e}")),
+            RollRequest::Oracle {
+                likelihood,
+                question,
+            } => Ok(self.engine.ask(likelihood, question.as_deref())),
+            RollRequest::Table { id } => self.engine.roll_table(&id).map_err(|e| e.to_string()),
+            RollRequest::Generator { id } => self.engine.generate(&id).map_err(|e| e.to_string()),
+            RollRequest::RerollSlot { previous, slot } => self
+                .engine
+                .reroll_slot(&previous, slot)
+                .map_err(|e| e.to_string()),
+        };
+        let Some(origin) = origin else { return };
+        match outcome {
+            Err(msg) => self.send(origin, &TabEvent::RollFailed(msg)),
+            Ok(rolled) => {
+                let entry = rolled.entry.clone();
+                if let Err(e) = self.store.append(&entry) {
+                    let msg = format!("journal write failed: {e}");
+                    self.show_toast(Toast::error(msg.clone()));
+                    self.send(TabId::Journal, &TabEvent::JournalWriteFailed(msg));
+                }
+                self.send(origin, &TabEvent::Rolled(Box::new(rolled)));
+                self.send(TabId::Journal, &TabEvent::JournalAppended(entry));
+            }
+        }
     }
 
     pub fn render(&self, frame: &mut Frame) {
