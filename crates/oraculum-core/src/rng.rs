@@ -52,15 +52,20 @@ impl RngRoller {
 
 impl Roller for RngRoller {
     fn roll(&mut self, sides: u32) -> u32 {
-        if sides < 2 {
-            return 1;
-        }
-        let limit = (u32::MAX / sides) * sides;
-        loop {
-            let x = self.rng.next_u32();
-            if x < limit {
-                return x % sides + 1;
-            }
+        sample(sides, || self.rng.next_u32())
+    }
+}
+
+/// Rejection sampler: uniform `1..=sides` from a `u32` source (D-04, D-05).
+fn sample(sides: u32, mut next_u32: impl FnMut() -> u32) -> u32 {
+    if sides < 2 {
+        return 1;
+    }
+    let limit = (u32::MAX / sides) * sides;
+    loop {
+        let x = next_u32();
+        if x < limit {
+            return x % sides + 1;
         }
     }
 }
@@ -184,6 +189,71 @@ mod tests {
         assert_eq!(a.roll(1), 1);
         // No entropy was consumed, so the streams still agree.
         assert_eq!(a.roll(100), b.roll(100));
+    }
+
+    #[test]
+    fn sampler_redraws_values_at_or_above_the_limit() {
+        // sides = 6: limit = (u32::MAX / 6) * 6 = 4_294_967_292.
+        let limit = (u32::MAX / 6) * 6;
+        assert_eq!(limit, 4_294_967_292);
+        let mut draws = vec![u32::MAX, limit, limit - 1].into_iter();
+        let mut calls = 0;
+        let v = sample(6, || {
+            calls += 1;
+            draws.next().unwrap_or(0)
+        });
+        // Two rejected draws, then limit - 1 accepted: (limit - 1) % 6 + 1 = 6.
+        assert_eq!(calls, 3);
+        assert_eq!(v, 6);
+    }
+
+    #[test]
+    fn sampler_accepts_below_limit_on_first_draw() {
+        let mut calls = 0;
+        let v = sample(20, || {
+            calls += 1;
+            39
+        });
+        assert_eq!((calls, v), (1, 20));
+        assert_eq!(sample(20, || 0), 1);
+    }
+
+    #[test]
+    fn sampler_never_draws_for_degenerate_sides() {
+        let mut draws = 0;
+        assert_eq!(
+            sample(1, || {
+                draws += 1;
+                5
+            }),
+            1
+        );
+        assert_eq!(
+            sample(0, || {
+                draws += 1;
+                5
+            }),
+            1
+        );
+        assert_eq!(draws, 0);
+    }
+
+    #[test]
+    fn distribution_is_roughly_uniform() {
+        // Fixed seed, so this is deterministic. 60_000 d6 rolls: expect 10_000
+        // per face; allow +-5% (about 5 standard deviations at this size).
+        let mut r = RngRoller::from_seed(2024);
+        let mut counts = [0u32; 6];
+        for _ in 0..60_000 {
+            counts[(r.roll(6) - 1) as usize] += 1;
+        }
+        for (face, &c) in counts.iter().enumerate() {
+            assert!(
+                (9_500..=10_500).contains(&c),
+                "face {} appeared {c} times: {counts:?}",
+                face + 1
+            );
+        }
     }
 
     #[test]
