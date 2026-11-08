@@ -33,4 +33,4 @@ Packets are in `docs/ORIGINALITY_PACKET_*.md`. The human's answers are recorded 
 
 ## Final release sign-off
 
-Content sign-off: all three batches approved by the human on 2026-11-08 (cards HAG-4, HAG-5). Release sign-off line: _pending_, to be completed at the release commit.
+Content sign-off: all three batches approved by the human on 2026-11-08 (cards HAG-4, HAG-5). Release sign-off: approved by the human on 2026-11-08 (card HAG-6) for v0.1.0.
