@@ -20,26 +20,26 @@ pub const MAX_SIDES: u16 = 1000;
 pub const MAX_TERMS: usize = 32;
 pub const MAX_TOTAL_DICE: usize = 1000;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
 pub enum Sign {
     Plus,
     Minus,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
 pub enum KeepKind {
     Highest,
     Lowest,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
 pub struct Keep {
     pub which: KeepKind,
     /// `1..=count`.
     pub n: u8,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
 pub struct DiceSpec {
     pub count: u8,
     pub sides: u16,
@@ -105,13 +105,13 @@ pub enum DiceError {
 }
 
 /// One rolled term. Mirrors `SignedTerm`.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub struct TermRoll {
     pub sign: Sign,
     pub kind: TermRollKind,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub enum TermRollKind {
     Const(u32),
     Dice {
@@ -141,7 +141,7 @@ impl TermRollKind {
 }
 
 /// Full detail of one evaluated expression. `Display` is the fixed snapshot format.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub struct DiceRoll {
     /// Canonical form of the expression.
     pub expr: String,

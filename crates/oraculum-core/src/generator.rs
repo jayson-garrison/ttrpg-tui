@@ -141,8 +141,8 @@ impl Generator {
         src: &str,
         default_id: &str,
     ) -> Result<(Generator, Vec<GeneratorWarning>), GeneratorError> {
-        let raw: RawGenerator =
-            toml::from_str(src).map_err(|e| GeneratorError::Toml(e.to_string()))?;
+        let raw: RawGenerator = toml::from_str(src)
+            .map_err(|e| GeneratorError::Toml(crate::table::toml_message(src, &e)))?;
         let id = raw.id.unwrap_or_else(|| default_id.to_string());
         if !is_valid_item_id(&id) {
             return Err(GeneratorError::BadId(id));
@@ -281,7 +281,7 @@ pub trait Content: TableLookup {
     fn generator(&self, id: &str) -> Option<&Generator>;
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub struct GeneratorResult {
     pub id: String,
     /// Concatenation of the segments' text.
@@ -293,21 +293,21 @@ pub struct GeneratorResult {
     pub template_rolls: Vec<DiceRoll>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub struct RenderedSegment {
     pub text: String,
     /// Index into `GeneratorResult::slots` when the text came from a slot.
     pub slot: Option<usize>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub enum SlotSourceRef {
     Table(String),
     Generator(String),
     Dice(String),
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub struct SlotResult {
     pub key: String,
     pub source: SlotSourceRef,
@@ -319,7 +319,7 @@ pub struct SlotResult {
     pub detail: Vec<ValueDetail>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub enum ValueDetail {
     Table(TableRoll),
     Generator(Box<GeneratorResult>),

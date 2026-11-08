@@ -427,6 +427,12 @@ fn user_override_that_creates_a_cycle_is_dropped_and_the_builtin_restored() {
     );
     let (cat, w) = Catalog::build(&builtin, &[user_b]);
     assert!(w.iter().any(|w| w.kind == WarningKind::Cycle), "{w:?}");
+    assert!(
+        w.iter()
+            .filter(|w| w.kind == WarningKind::Cycle)
+            .all(|w| w.kept_builtin),
+        "{w:?}"
+    );
     assert!(cat.table("a").is_some(), "built-in a must survive");
     assert_eq!(text_of(&cat, "a", &[1, 1]), "leaf");
 }

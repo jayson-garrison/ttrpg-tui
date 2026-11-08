@@ -90,6 +90,7 @@ fn warning(source: &Source, key: &Key, kind: WarningKind, message: String) -> Lo
         item: Some(key.clone()),
         kind,
         message,
+        kept_builtin: false,
     }
 }
 

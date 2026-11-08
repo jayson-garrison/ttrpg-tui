@@ -1057,8 +1057,11 @@ dependencies = [
  "directories",
  "insta",
  "oraculum-core",
+ "rand 0.10.3",
  "ratatui",
+ "serde_json",
  "tempfile",
+ "thiserror 2.0.21",
 ]
 
 [[package]]

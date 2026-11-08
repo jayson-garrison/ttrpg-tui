@@ -112,6 +112,19 @@ struct RawEntry {
     text: String,
 }
 
+/// One-line description of a TOML error: `line N: message`. The library's own
+/// `Display` spans several lines (a source snippet), which would break the
+/// one-warning-per-line output.
+pub(crate) fn toml_message(src: &str, e: &toml::de::Error) -> String {
+    match e.span() {
+        Some(span) => {
+            let upto = src.get(..span.start).unwrap_or("");
+            format!("line {}: {}", upto.matches('\n').count() + 1, e.message())
+        }
+        None => e.message().to_string(),
+    }
+}
+
 /// Finds tables by id when resolving `{table:..}` references.
 pub trait TableLookup {
     fn table(&self, id: &str) -> Option<&Table>;
@@ -124,13 +137,13 @@ impl TableLookup for BTreeMap<String, Table> {
 }
 
 /// A resolved `{table:..}` or `{roll:..}` inside an entry, in order.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub enum ResolvedRef {
     Table(Box<TableRoll>),
     Dice(DiceRoll),
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub struct TableRoll {
     pub table_id: String,
     pub dice: DiceRoll,
@@ -147,7 +160,8 @@ impl Table {
     /// Parse and validate a table file. `default_id` is used when the file has
     /// no `id` (the loader passes the file stem).
     pub fn from_toml(src: &str, default_id: &str) -> Result<Table, TableError> {
-        let raw: RawTable = toml::from_str(src).map_err(|e| TableError::Toml(e.to_string()))?;
+        let raw: RawTable =
+            toml::from_str(src).map_err(|e| TableError::Toml(toml_message(src, &e)))?;
 
         let id = raw.id.unwrap_or_else(|| default_id.to_string());
         if !is_valid_item_id(&id) {
