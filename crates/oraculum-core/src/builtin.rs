@@ -68,6 +68,26 @@ pub const TABLES: &[(&str, &str)] = &[
         include_str!("../../../content/tables/event_focus.toml"),
     ),
     (
+        "faction_form",
+        include_str!("../../../content/tables/faction_form.toml"),
+    ),
+    (
+        "faction_goal",
+        include_str!("../../../content/tables/faction_goal.toml"),
+    ),
+    (
+        "faction_method",
+        include_str!("../../../content/tables/faction_method.toml"),
+    ),
+    (
+        "faction_resource",
+        include_str!("../../../content/tables/faction_resource.toml"),
+    ),
+    (
+        "faction_theme",
+        include_str!("../../../content/tables/faction_theme.toml"),
+    ),
+    (
         "family_names",
         include_str!("../../../content/tables/family_names.toml"),
     ),
@@ -286,6 +306,10 @@ pub const GENERATORS: &[(&str, &str)] = &[
     (
         "event",
         include_str!("../../../content/generators/event.toml"),
+    ),
+    (
+        "faction",
+        include_str!("../../../content/generators/faction.toml"),
     ),
     (
         "magic_item",

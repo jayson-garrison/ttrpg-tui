@@ -558,10 +558,9 @@ fn generator_snapshots() {
     }
 }
 
-// ---- whole-set requirements, enabled in T6.8 ----
+// ---- whole-set requirements (enabled in T6.8) ----
 
 #[test]
-#[ignore = "enabled in T6.8"]
 fn required_generators_exist() {
     let (cat, warnings) = catalog();
     assert!(warnings.is_empty());
@@ -573,7 +572,6 @@ fn required_generators_exist() {
 }
 
 #[test]
-#[ignore = "enabled in T6.8"]
 fn required_tables_exist() {
     let (cat, warnings) = catalog();
     assert!(warnings.is_empty());

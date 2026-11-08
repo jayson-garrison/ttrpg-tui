@@ -12,6 +12,14 @@ QA (Rick) records "reviewed" per PR below. The human sign-off line at the end is
 | T6.5 | `quest_*` (6), `encounter_activity`, `encounter_disposition`; `quest`, `encounter` | pending | encounter twist uses `event` at 25% (D-76 line) |
 | T6.6 | `treasure_valuable`, `item_*` (6); `magic_item`, `treasure` | pending | nested magic item and drawback on D-76 lines |
 | T6.7 | `dungeon_*` (5), `room_*` (4); `dungeon_room`, `dungeon` | pending | deepest nesting dungeon > treasure > magic_item |
+| T6.8 | `faction_*` (5), `faction`; required-15 and required-69 tests enabled | pending | complete set: 15 generators, 69 tables |
+
+## Packet listing (complete set)
+
+- 15 generators: creature, dungeon, dungeon_room, encounter, event, faction, magic_item, npc, quest, rumor, settlement, tavern, trap, treasure, wilderness_location.
+- 69 tables (ids in `crates/oraculum-core/tests/builtin.rs`, `REQUIRED_TABLES`; the list matches `docs/T6_PLAN.md` section 5).
+- Snapshots of seeds 1..3 per generator: `crates/oraculum-core/tests/snapshots/`.
+- Automated checks: entry contract, denylist (entries and name/description/tags/template), seed sweep 0..500, determinism, no orphan tables.
 
 ## Human sign-off
 
