@@ -10,8 +10,7 @@ use std::path::PathBuf;
 use std::rc::Rc;
 
 use clap::{Parser, Subcommand, ValueEnum};
-use oraculum_core::builtin;
-use oraculum_core::catalog::{Catalog, Filter, ItemKind};
+use oraculum_core::catalog::{Catalog, Filter, ItemKind, Source};
 use oraculum_core::clock::Clock;
 use oraculum_core::engine::{Engine, Rolled};
 use oraculum_core::error::EvalError;
@@ -95,6 +94,8 @@ pub struct Env<'a> {
     pub session: SessionName,
     pub seed: u64,
     pub clock: Box<dyn Clock>,
+    /// Built-in content; tests pass fixtures so they never pin shipped text (D-72).
+    pub builtin: Vec<Source>,
     pub out: &'a mut dyn Write,
     pub err: &'a mut dyn Write,
 }
@@ -105,6 +106,7 @@ pub fn run(cmd: Command, env: Env<'_>) -> Result<(), AppError> {
         session,
         seed,
         clock,
+        builtin,
         out,
         err,
     } = env;
@@ -123,12 +125,12 @@ pub fn run(cmd: Command, env: Env<'_>) -> Result<(), AppError> {
             likelihood,
             question,
         } => {
-            let mut engine = engine(load_catalog(&data_dir, err)?, seed, clock);
+            let mut engine = engine(load_catalog(&data_dir, &builtin, err)?, seed, clock);
             let rolled = engine.ask(likelihood.into(), question.as_deref());
             finish(&rolled, out, &store)
         }
         Command::Table { id } => {
-            let catalog = load_catalog(&data_dir, err)?;
+            let catalog = load_catalog(&data_dir, &builtin, err)?;
             let mut engine = engine(Rc::clone(&catalog), seed, clock);
             let rolled = engine
                 .roll_table(&id)
@@ -136,13 +138,13 @@ pub fn run(cmd: Command, env: Env<'_>) -> Result<(), AppError> {
             finish(&rolled, out, &store)
         }
         Command::Gen { id } => {
-            let catalog = load_catalog(&data_dir, err)?;
+            let catalog = load_catalog(&data_dir, &builtin, err)?;
             let mut engine = engine(Rc::clone(&catalog), seed, clock);
             let rolled = engine.generate(&id).map_err(|e| eval_error(&e, &catalog))?;
             finish(&rolled, out, &store)
         }
         Command::List { category, search } => {
-            let catalog = load_catalog(&data_dir, err)?;
+            let catalog = load_catalog(&data_dir, &builtin, err)?;
             let filter = Filter {
                 text: search,
                 category,
@@ -173,9 +175,13 @@ fn engine(catalog: Rc<Catalog>, seed: u64, clock: Box<dyn Clock>) -> Engine {
 }
 
 /// Built-in plus user content; every load warning goes to stderr (D-60).
-fn load_catalog(data_dir: &DataDir, err: &mut dyn Write) -> Result<Rc<Catalog>, AppError> {
+fn load_catalog(
+    data_dir: &DataDir,
+    builtin: &[Source],
+    err: &mut dyn Write,
+) -> Result<Rc<Catalog>, AppError> {
     let (user, file_warnings) = load_user_sources(data_dir);
-    let (catalog, warnings) = Catalog::build(&builtin::sources(), &user);
+    let (catalog, warnings) = Catalog::build(builtin, &user);
     for w in file_warnings.iter().chain(&warnings) {
         writeln!(err, "{}", output::format_warning(w))?;
     }

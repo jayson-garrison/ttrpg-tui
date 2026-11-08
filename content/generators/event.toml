@@ -1,0 +1,19 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: clause template, lowercase, no final period.
+name = "Event"
+category = "Oracle"
+tags = ["oracle", "event"]
+description = "An unexpected event: what it is about, what happens, and to what."
+template = "{focus}: {action} / {subject}"
+
+[[slots]]
+key = "focus"
+table = "event_focus"
+
+[[slots]]
+key = "action"
+table = "meaning_action"
+
+[[slots]]
+key = "subject"
+table = "meaning_subject"

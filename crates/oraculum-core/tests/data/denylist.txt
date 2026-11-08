@@ -1,0 +1,87 @@
+# Originality / safety lint terms (T6_PLAN section 4). One term per line, matched
+# case-insensitively as whole words. This is a safety net, not proof of originality:
+# the human reviews the packet (D-46). QA extends this list as needed.
+
+# Published game, setting and product names
+beholder
+mind flayer
+owlbear
+illithid
+tarrasque
+forgotten realms
+greyhawk
+eberron
+dragonlance
+ravenloft
+warhammer
+mythic
+ironsworn
+pathfinder
+dungeons and dragons
+dnd
+
+# More published monsters, characters and settings (QA additions)
+drow
+githyanki
+umber hulk
+gelatinous cube
+displacer beast
+rust monster
+carrion crawler
+drizzt
+elminster
+gygax
+cthulhu
+lovecraft
+necronomicon
+dark souls
+skyrim
+witcher
+zelda
+lord of the rings
+game of thrones
+harry potter
+call of cthulhu
+shadowrun
+vampire the masquerade
+mutants and masterminds
+
+# Fiction names
+tolkien
+hobbit
+mordor
+gandalf
+frodo
+sauron
+middle earth
+hogwarts
+star wars
+
+# Real-world nations, faiths and brands
+america
+england
+france
+germany
+japan
+china
+india
+russia
+christian
+muslim
+jewish
+catholic
+islam
+buddhist
+hindu
+nazi
+hitler
+disney
+marvel
+nintendo
+pokemon
+
+# Content the project does not carry
+sex
+rape
+porn
+nude

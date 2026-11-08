@@ -32,6 +32,7 @@ fn invoke(dir: &Path, args: &[&str]) -> Out {
         session,
         seed: cli.seed.unwrap_or(1),
         clock: Box::new(FixedClock(TS)),
+        builtin: Vec::new(),
         out: &mut out,
         err: &mut err,
     };

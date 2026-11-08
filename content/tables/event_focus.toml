@@ -1,0 +1,55 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: clause, lowercase, no final period.
+name = "Event focus"
+category = "Oracle"
+tags = ["oracle", "event"]
+description = "What an unexpected event is about. Uneven ranges on purpose: common focuses take more of the d100."
+dice = "d100"
+
+[[entries]]
+range = [1, 7]
+text = "a hidden danger surfaces"
+
+[[entries]]
+range = [8, 14]
+text = "someone close needs help"
+
+[[entries]]
+range = [15, 26]
+text = "news or a message arrives"
+
+[[entries]]
+range = [27, 33]
+text = "a rival makes a move"
+
+[[entries]]
+range = [34, 47]
+text = "the surroundings change"
+
+[[entries]]
+range = [48, 55]
+text = "a resource runs short"
+
+[[entries]]
+range = [56, 64]
+text = "a stranger turns up"
+
+[[entries]]
+range = [65, 72]
+text = "an old promise comes due"
+
+[[entries]]
+range = [73, 85]
+text = "a plan goes slightly wrong"
+
+[[entries]]
+range = [86, 92]
+text = "a lucky opening appears"
+
+[[entries]]
+range = [93, 97]
+text = "a secret slips out"
+
+[[entries]]
+range = [98, 100]
+text = "everything pauses, then shifts"
