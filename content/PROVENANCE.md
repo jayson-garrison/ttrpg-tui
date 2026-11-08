@@ -19,9 +19,9 @@ Packets are in `docs/ORIGINALITY_PACKET_*.md`. The human's answers are recorded 
 | Batch | Content | Packet | Human sign-off |
 |---|---|---|---|
 | 1 | T6.1-T6.3: oracle tables, names, npc, rumor, trap, creature | `ORIGINALITY_PACKET_1.md` | Accepted 2026-11-08 (card HAG-4): spec-dictated oracle ids `event_focus`, `meaning_action`, `meaning_subject` kept; nothing else flagged as familiar |
-| 2 | T6.4-T6.6 (after T6.5/T6.6) | pending | pending |
-| 3 | T6.7-T6.8 (final) | pending | pending |
+| 2 | T6.4-T6.6: places, quest, encounter, treasure, magic item | `ORIGINALITY_PACKET_2.md` | Approved 2026-11-08 (card HAG-5): "I agree and approve" |
+| 3 | T6.7-T6.8 (final): remaining generators and tables | `ORIGINALITY_PACKET_3.md` | Approved 2026-11-08 (card HAG-5): "I agree and approve" |
 
 ## Final release sign-off
 
-Reviewer: _pending_ | Date: _pending_ | Commit: _pending_
+Content sign-off: all three batches approved by the human on 2026-11-08 (cards HAG-4, HAG-5). Release sign-off line: _pending_, to be completed at the release commit.
