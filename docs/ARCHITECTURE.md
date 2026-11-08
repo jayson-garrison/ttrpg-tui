@@ -523,7 +523,7 @@ pub fn run(cmd: Command, env: Env<'_>) -> Result<(), AppError>;
 
 Command behavior:
 - **Content loading is lazy:** `ask`, `table`, `gen`, `list` and the TUI load content (built-in + user) and print warnings to stderr; `roll` and `export` do not need content and print none (D-29).
-- Each invocation builds a fresh `RngRoller::from_seed(seed)`; so `--seed 7 roll 1d20` is identical every time (D-30; see Q1).
+- Each invocation builds a fresh `RngRoller::from_seed(seed)`; so `--seed 7 roll 1d20` is identical every time (D-30, confirmed by the human).
 - Output: stdout gets `entry.result` plus a newline, byte-identical to the journal's `result`. `list` prints one row per item: `{T|G}  {id}  {category}  {name}` with columns padded to the widest value; same `Filter` as the Library.
 - `ask` kebab names map via clap `ValueEnum` to `Likelihood`; the optional question is the second positional.
 - `export`: reads the session journal, writes Markdown to `--out` (default `<data-dir>/export.md`) via write-to-temp-then-rename, prints the path on stdout. Malformed journal lines are reported on stderr.
@@ -687,7 +687,7 @@ Library body: left 40% list, right 60% detail; bottom panel (4 rows) when warnin
 | `faction` (Organizations) | faction_form, faction_theme, faction_goal, faction_method, faction_resource, leader => gen `npc` |
 | `event` (Oracle) | event_focus (d100 ranged), meaning_action (list, 20), meaning_subject (list, 20) |
 
-Built-in files never use `{{`/`}}`, so the "no unresolved placeholders" test can reject any `{` or `}` in rendered output. Deepest built-in nesting: `dungeon` => `treasure` => `magic_item` (depth 2). Content risk is covered in §12 Q3.
+Built-in files never use `{{`/`}}`, so the "no unresolved placeholders" test can reject any `{` or `}` in rendered output. Deepest built-in nesting: `dungeon` => `treasure` => `magic_item` (depth 2). Originality sign-off is by the human (D-46).
 
 ---
 
@@ -736,7 +736,7 @@ panic         -> hook restores terminal, then default panic output
 `cargo deny check bans` with `deny.toml` banning `openssl`, `openssl-sys`, `libsqlite3-sys`, `git2`, `libgit2-sys`, `tokio`, `async-std`, `reqwest`, `hyper`. This is a tool run in CI, not a dependency. It makes spec §3 "no C deps / no async / no network" mechanically checkable. Advisory if the human prefers only the three spec gates.
 
 ### 9.5 Manual QA checklist (per release candidate)
-Terminals: macOS Terminal and iTerm2, Linux gnome-terminal/xterm and `tmux`. Check: resize during use, 60x20 minimum message, Ctrl-C in each mode, quit restores the screen and cursor, forced panic (local patch adding `panic!()`) leaves a usable shell, key table in help matches behavior, journal survives `kill -9` mid-session, broken user TOML shows a warning but app runs, content originality spot-check (A§12 Q3).
+Terminals: macOS Terminal and iTerm2, Linux gnome-terminal/xterm and `tmux`. Check: resize during use, 60x20 minimum message, Ctrl-C in each mode, quit restores the screen and cursor, forced panic (local patch adding `panic!()`) leaves a usable shell, key table in help matches behavior, journal survives `kill -9` mid-session, broken user TOML shows a warning but app runs, content originality spot-check (D-46 review packet).
 
 ---
 
@@ -781,26 +781,68 @@ Full reasoning is in `DECISIONS.md`. "Verified" means checked, no problem.
 | 10 | Slot re-roll vs template `{roll:..}` and slot `chance` | Template rolls stored and kept; re-roll forces presence (D-13, D-15) |
 | 11 | `distinct` comparison and "up to 10 attempts" ambiguous | Compare entry index; 10 total rolls per value (D-12) |
 | 12 | `count` unbounded | Max 50, load-time check (D-14) |
-| 13 | "id configurable" for the twist generator but no config mechanism | Engine parameter, default `event`, override by user file with same id (D-26; Q2) |
+| 13 | "id configurable" for the twist generator but no config mechanism | Engine parameter, default `event`, override by user file with same id (D-26, confirmed) |
 | 14 | Journal `input`/`result`/`detail` types undefined; "headless prints the same text" | Per-kind table in A§3.9; `result` is exactly stdout (D-22, D-23) |
 | 15 | Markdown layout for multi-line results and notes | Exact format in A§3.9 (D-25) |
 | 16 | Crash can leave a partial last JSONL line; appends would corrupt the next entry | Prepend `\n` when needed (D-32) |
 | 17 | `--session NAME` becomes a filename (path traversal) | `^[A-Za-z0-9_-]{1,64}$` (D-31) |
 | 18 | `ts` makes outputs time-dependent while "identical output" is promised | `ts` excluded from the claim; tests mask it (D-43) |
-| 19 | Seed per process vs per session; unseeded runs not reproducible | Fresh RNG per invocation; random seed is always a visible `u64` (D-06, D-30; Q1) |
+| 19 | Seed per process vs per session; unseeded runs not reproducible | Fresh RNG per invocation; random seed is always a visible `u64` (D-06, D-30, confirmed) |
 | 20 | `rand` range sampling can change across versions, breaking pinned expectations | Own seed expansion and rejection sampler (D-04) |
 | 21 | `include_str!` of a path outside the crate | Accepted; directory-vs-list test replaces `build.rs` (D-27) |
 | 22 | Library key for loader warnings, Esc semantics in filter, `t` target, `r` vs Enter unspecified | `w`; Enter keeps / Esc clears; Oracle category; `r` repeats displayed item (D-40, D-41, D-45) |
 | 23 | Unknown TOML keys, `name`/`category` requiredness, user file hygiene | `deny_unknown_fields`; `name` required; defaults; 1 MiB cap (D-18, D-28, D-35) |
-| 24 | Event Focus / meaning tables mirror the concept of a published product | Originality is a content-review gate (Q3) |
+| 24 | Event Focus / meaning tables mirror the concept of a published product | Originality is a content-review gate; the human signs off (D-46) |
 | 25 | Verified, no issue: the exceptional-range table equals the formula for all rows; all ten worked examples hold; 9 doubles in 1..=100; `Roller` d100 and list tables fit the dice limits | none |
 
 ---
 
-## 12. Open questions for the human
+## 12. Open questions and resolved questions
 
-1. **Seed semantics across CLI runs (D-30).** Today every `oraculum --seed N ...` invocation restarts the RNG, so `--seed 7 roll 1d20` is the same number every time. The alternative is to persist the stream position per session so repeated seeded calls continue a sequence. Which do you want? (Default: restart; simplest and matches "same seed => identical output".)
-2. **Twist generator configurability (D-26).** Spec says the `event` id is "configurable" but defines no setting. Default plan: an engine parameter plus override-by-file (a user generator with id `event` replaces it). Do you want a real setting (a `config.toml` or a `--twist-generator` flag), which adds a file/flag not in the spec?
-3. **Content originality sign-off (§3 hard constraint).** Who reviews the 69 tables for originality, especially `event_focus`, `meaning_action`, `meaning_subject` and the oracle-adjacent wording, before release? I recommend a named reviewer and a short provenance note in `content/`.
-4. **Product vs repo name.** Keeping "Oraculum" as binary, crate, and data-dir name (`~/.local/share/oraculum`) as instructed. Confirm no rename is pending; changing it later touches the data-dir path.
-5. **Toolchain.** Which Rust edition and minimum supported Rust version (MSRV)? Proposed: latest stable at M0, edition 2021 unless a dependency needs 2024, MSRV = whatever ratatui requires then.
+**Resolved by the human (card HAG-1):**
+1. CLI seed: every invocation restarts the RNG from `--seed`; no persisted stream position (D-30).
+2. Twist generator: engine parameter defaulting to `event`, overridable by a user generator with id `event`; no `config.toml`, no flag (D-26, D-47).
+3. Content originality: the human signs off all built-in content before release (D-46).
+
+**Still open (non-blocking; defaults apply unless the human objects):**
+1. **Product vs repo name.** Keeping "Oraculum" as binary, crate, and data-dir name (`~/.local/share/oraculum`) as instructed. Confirm no rename is pending; changing it later touches the data-dir path.
+2. **Toolchain.** Which Rust edition and minimum supported Rust version (MSRV)? Proposed: latest stable at M0, edition 2021 unless a dependency needs 2024, MSRV = whatever ratatui requires then.
+
+---
+
+## 13. Build order for one developer
+
+For Stack (developer) and Rick (QA). Take one task at a time, in order; each ends green on the three gates (`cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`, `cargo test`). Rick tests each task after Stack marks it done. Sizes are estimates in ideal days (see §10 for detail and dependencies). "Spec" means `docs/DESIGN.md`.
+
+**T0 Scaffold and gates (1 d).** Workspace, workspace lints, `clippy.toml`, `deny.toml`, CI on macOS and Linux, empty crates, versions pinned.
+- Rick: CI is green on both OSes; a temporary `unwrap()` in non-test code fails CI; `cargo deny check bans` passes.
+
+**T1 Randomness, clock, dice (2 d).** `Roller`, `RngRoller`, `ScriptedRoller`, `Clock`, `FixedClock`, `DiceExpr` parse/roll/display (§3.1-3.3).
+- Rick: `3d20kl1+2` with scripted rolls `14,3,17` prints exactly `3d20kl1+2 => [14, 3, 17] keep [3] +2 = 5`; `d66`, `1d66`, `d66kh1`, `-3`, `d1`, `101d6`, `2d6kh3` behave as D-07/D-08 and the spec limits; a fixed-seed golden vector test exists and passes; proptests pass.
+
+**T2 Oracle (1 d).** `evaluate` and `ask` (§3.4).
+- Rick: all ten spec worked examples pass; for each likelihood, rolls 1..=100 give yes count = chance and exactly 9 twist rolls; a missing `event` generator yields a twist message naming what is missing, no error.
+
+**T3 Templates and tables (3 d).** `Template`, `Table` validation and rolling (§3.5-3.6).
+- Rick: a corpus of bad tables (gap, overlap, out of range, bad d66 digit, empty, `items`+`entries`, 1 or 1001 items, unknown key) each yields its own typed error naming the entry; `{{`/`}}`, `{table:x}`, `{roll:2d6}` resolve; recursion deeper than 5 is rejected; no input panics.
+
+**T4 Generators and catalog (4 d).** `Generator`, slots, segments, slot re-roll, `Catalog::build` pipeline, `Filter` (§3.7-3.8).
+- Rick: scripted tests prove `count`, `distinct`, `join`, `list`, `chance` (both outcomes), nested generators; re-rolling one slot leaves all other slots identical; a user file that creates a cycle or dangling reference is dropped with a warning and the built-in survives (D-21); library order is stable across runs.
+
+**T5 Journal, storage, Engine, CLI (4 d).** JSONL codec, markdown export, data dir, `JournalStore`, `Engine`, all spec §8 subcommands (§3.9-3.10, §5.1-5.3).
+- Rick: with `--seed 7 --data-dir <tmp>` each of `roll`, `ask`, `table`, `gen`, `list`, `export` prints what the journal stores in `result`; running the same command twice gives identical stdout (D-30); exit codes 0/1/2 as in §5.1; `--session ../x` exits 2; a truncated last journal line is skipped, reported, and the next append starts on a new line; export matches the snapshot. First usable headless build.
+
+**T6 Built-in content (5 d, can overlap T7-T9).** 15 generators and about 69 tables with provenance headers (§7).
+- Rick: zero load warnings; every generator renders for seeds 0..500 with no empty value and no `{` or `}`; list tables have at least 12 items; the 15 required generators exist; Rick assembles the originality review packet for the human (D-46). Release gate: the human's sign-off is recorded in `content/PROVENANCE.md`.
+
+**T7 TUI shell and Dice tab (3 d).** `TerminalGuard`, event loop, `App`, `Action`/`TabEvent`, tab bar, help overlay, toast, `LineInput`, Dice tab (§5.4).
+- Rick: `1`-`4` and Tab switch tabs; `?` shows help; `q` quits only when no text field is focused; `Ctrl-C` while typing cancels the edit, a second quits; invalid dice input shows an inline error and is not journaled; the terminal is restored on quit and after a forced panic (local patch) in macOS Terminal and a Linux terminal; under 60x20 shows "terminal too small".
+
+**T8 Oracle and Journal tabs (3 d).** Both tabs, live journal feed, notes, export key.
+- Rick: `←/→` change likelihood; `/` edits the question; Enter rolls; result shows outcome label, `d100: N`, and a twist block when the roll is a double; `n` adds a note; `x` writes `export.md` and shows the path; a TUI session then `oraculum export` shows the same entries.
+
+**T9 Library tab (4 d).** List, filter, category cycling, detail and entries views, highlighted generator results, slot re-roll, warnings panel.
+- Rick: `/` filters by id, name, category, tag; `Esc` clears; `c` cycles categories; `Enter` rolls the selected item and `r` repeats the displayed one; `s` then Enter re-rolls only the chosen slot; `w` shows loader warnings from a deliberately broken user file; user-added tables and generators appear automatically; `t` from the Oracle tab opens the Library on category `Oracle`.
+
+**T10 Hardening and docs (3 d).** Fuzz-lite proptests, README with authoring guide, release checklist, full manual QA pass (§9.5).
+- Rick: §9.5 checklist passes on macOS (Apple Silicon) and Linux; README examples run as written; no open defects above minor; the human's content sign-off (T6) is on file. Release candidate.

@@ -2,7 +2,7 @@
 
 Records where `docs/DESIGN.md` (the spec) is ambiguous, silent, or internally inconsistent, as the spec requires (§3, last bullet). Each entry: spec reference, decision, reason. Referenced from `docs/ARCHITECTURE.md` as `D-nn`.
 
-**No spec hard constraint (§3) is changed by any entry.** Entries that touch spec text beyond filling a gap are marked **[refines]**. Entries needing the human are marked **[human]** and repeated in ARCHITECTURE §12.
+**No spec hard constraint (§3) is changed by any entry.** Entries that touch spec text beyond filling a gap are marked **[refines]**. Entries the human decided are marked **[human-confirmed]** (card HAG-1); entries still awaiting the human are listed in ARCHITECTURE §12.
 
 ---
 
@@ -56,7 +56,7 @@ Records where `docs/DESIGN.md` (the spec) is ambiguous, silent, or internally in
 
 **D-25 Markdown export format.** *Decision:* exact layout in ARCHITECTURE §3.9: `# Session: <name>`, bullets with `YYYY-MM-DD HH:MM UTC · kind · input → first line`, continuation lines indented two spaces, notes as separate paragraphs, file order, no escaping.
 
-**D-26 Twist generator id. [human]** Spec: "id configurable", no mechanism given. *Decision:* engine parameter defaulting to `event`; users change behavior by supplying their own generator with id `event`. A settings file/flag is deferred (Open question 2).
+**D-26 Twist generator id. [human-confirmed]** Spec: "id configurable", no mechanism given. *Decision:* engine parameter defaulting to `event`; users change behavior by supplying their own generator with id `event`. No `config.toml` and no flag: the human confirmed this (HAG-1).
 
 **D-27 Embedding content.** *Decision:* `include_str!` lists in `oraculum-core/src/builtin.rs` pointing to the repo-root `content/`; no `build.rs`; a test compares the lists with the directory. *Consequence:* core cannot be published to crates.io unchanged (not a goal).
 
@@ -64,7 +64,7 @@ Records where `docs/DESIGN.md` (the spec) is ambiguous, silent, or internally in
 
 **D-29 Lazy content loading in the CLI.** Spec says warnings print to stderr. *Decision:* only commands that need content (`ask`, `table`, `gen`, `list`, TUI) load it and print warnings; `roll` and `export` do not.
 
-**D-30 RNG restarts each CLI invocation. [human]** *Decision:* each process builds a fresh RNG from `--seed`; there is no persisted stream position. *Reason:* simplest reading of "same seed => identical output". (Open question 1.)
+**D-30 RNG restarts each CLI invocation. [human-confirmed]** *Decision:* each process builds a fresh RNG from `--seed`; there is no persisted stream position. *Reason:* simplest reading of "same seed => identical output". Confirmed by the human (HAG-1).
 
 **D-31 Session names.** `--session` becomes a filename. *Decision:* must match `^[A-Za-z0-9_-]{1,64}$`, otherwise exit 2. *Reason:* blocks path traversal (`../x`).
 
@@ -95,3 +95,7 @@ Records where `docs/DESIGN.md` (the spec) is ambiguous, silent, or internally in
 **D-44 Mechanical constraint checks (non-spec CI step).** *Decision:* add `cargo deny check bans` (C `-sys` crates, async runtimes, network crates). Tool only, no dependency. Advisory; drop if only the three spec gates are wanted.
 
 **D-45 Library and history details.** *Decision:* `Enter` rolls the selected item, `r` repeats the item that produced the displayed result; a slot re-roll is journaled as kind `generator` with input `<id> [slot <key>]`; Oracle and Dice "last ten" lists are in-memory for the session (not rehydrated from the journal); the Journal tab loads the full file at startup.
+
+**D-46 Content originality sign-off. [human-confirmed]** Spec §3: built-in content must be original. *Decision:* the human personally signs off originality of all built-in tables and generators before release (HAG-1). The developer adds a provenance header comment to every content file; Rick (QA) prepares a review packet (all content files plus rendered samples across seeds) for the human. Release is blocked until the human signs off; the sign-off is recorded in `content/PROVENANCE.md` (reviewer, date, commit).
+
+**D-47 No settings file. [human-confirmed]** Consequence of D-26: v1 has no `config.toml`. The only user-visible configuration is the CLI flags in spec §8 and files in the data directory.
