@@ -35,7 +35,10 @@ impl App {
     pub fn new(info: AppInfo, engine: Engine, store: JournalStore, clock: Box<dyn Clock>) -> App {
         let tabs: Vec<Box<dyn Tab>> = vec![
             Box::new(OracleTab::new()),
-            Box::new(LibraryTab::new(engine.catalog().clone())),
+            Box::new(LibraryTab::new(
+                engine.catalog().clone(),
+                info.warnings.clone(),
+            )),
             Box::new(DiceTab::new()),
             Box::new(JournalTab::new()),
         ];
