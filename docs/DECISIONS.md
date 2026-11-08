@@ -137,3 +137,15 @@ Records where `docs/DESIGN.md` (the spec) is ambiguous, silent, or internally in
 **D-66 TUI order. [human-confirmed, HAG-3]** *Decision:* T7 Dice, T8 Oracle and Journal, T9 Library.
 
 **D-67 Catalog details (T4). [refines A§3.8]** *Decisions:* (1) Removing a user item removes every user layer of that (kind, id) and restores the built-in beneath, which is then re-validated; removing a built-in drops the key. (2) Nesting depth is measured over same-kind references only (generator chains and table chains separately, D-16); an over-deep node is handled user-first: user items at or below it are removed, otherwise the node itself. (3) A generator removed for a missing reference is remembered with the missing id, so an oracle twist can name it (A§3.4); `TwistSource for Catalog` uses this. (4) A leading BOM in a source is ignored. (5) `WarningKind::FileUnreadable` / `FileTooLarge` are added with the storage layer in T5, since core does no file I/O.
+
+**D-68 Originality: no licensed sources. [refines D-46, S§3]** *Decision:* built-in content is written from scratch. SRD, Creative Commons and other licensed text are not used even where permitted, so the project carries no attribution duty. *Reason:* simplest reading of "original" (S§3); one rule is easier to audit than per-source licence terms. A tests/data/denylist.txt lint catches known proprietary names and unsafe terms; it is a safety net, not proof.
+
+**D-69 Content entry contract. [new]** *Decision:* built-in entries are 3-80 ASCII characters, no leading/trailing/double space, no final period, no duplicates within a table (case-insensitive). Templates never add articles; entries carry their own. Tables used with `count > 1` contain no commas. Categories are fixed: Characters, Creatures, Places, Sites, Adventure, Items, Organizations, Oracle. Enforced by `tests/builtin.rs`. *Reason:* makes "renders cleanly" mechanically checkable (S§6.2) and keeps terminal output ASCII-safe.
+
+**D-70 No braces in built-in table text. [refines A§7]** *Decision:* built-in tables use no `{table:}`, `{roll:}` or `{{ }}`; composition is done by generators. *Reason:* the seed-sweep can reject any `{` or `}` in source and output.
+
+**D-71 T6 split and gating. [refines A§13]** *Decision:* T6 is eight PRs (T6.1 harness + oracle ... T6.8 faction + enable full checks), each self-contained so the Catalog loads with zero warnings in every PR; the 15-generator and 69-table checks are `#[ignore]`d until T6.8. Details in `docs/T6_PLAN.md`. The plan's inventory is the source of truth for the 69 ids.
+
+**D-72 Built-in output is pinned only in `tests/builtin.rs`. [new]** *Decision:* insta snapshots of seeds 1..3 per generator live in the core content test; all other tests (T5 CLI, T7-T9 TUI) use fixture catalogs and never assert built-in text. *Reason:* content edits must not churn unrelated tests; the snapshots double as the QA review material (D-65).
+
+**D-73 Treasure coins. [refines S§6.1]** *Decision:* `treasure.coins` is a dice slot `4d6` with template "{coins} coins"; the dice grammar has no multiplication and no format change is made for content.
