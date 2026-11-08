@@ -1,0 +1,15 @@
+# cargo-deny: makes spec section 3 (no C deps, no async runtime, no network) checkable.
+# Run: cargo deny check bans
+[bans]
+multiple-versions = "allow"
+deny = [
+    { crate = "openssl" },
+    { crate = "openssl-sys" },
+    { crate = "libsqlite3-sys" },
+    { crate = "git2" },
+    { crate = "libgit2-sys" },
+    { crate = "tokio" },
+    { crate = "async-std" },
+    { crate = "reqwest" },
+    { crate = "hyper" },
+]
