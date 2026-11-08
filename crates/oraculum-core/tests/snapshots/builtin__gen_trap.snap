@@ -1,0 +1,7 @@
+---
+source: crates/oraculum-core/tests/builtin.rs
+expression: body
+---
+seed 1: Triggered by any sound above a whisper: a hidden spring fills the room with thick smoke. Warning sign: rust-streaked walls. Danger: hazardous.
+seed 2: Triggered by any sound above a whisper: a chain of linked bells drops the floor away. Warning sign: scratch marks near the threshold. Danger: hazardous.
+seed 3: Triggered by a lever that looks safe: a hidden winch makes a deafening crash. Warning sign: unnaturally quiet air. Danger: deadly.

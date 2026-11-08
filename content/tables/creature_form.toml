@@ -1,0 +1,28 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: noun phrase with its own article, lowercase.
+name = "Creature form"
+category = "Creatures"
+tags = ["creature", "form"]
+description = "The shape of a creature. Reused by encounters."
+items = [
+  "a stooped marsh stalker",
+  "a pale cave hound",
+  "a hulking mudback",
+  "a thin-limbed reed dancer",
+  "a barrel-chested ridge ram",
+  "a moth-winged glider the size of a cart",
+  "a six-legged hill crawler",
+  "a mossy stone sentinel",
+  "a spindly lamp-eyed heron",
+  "a long-snouted burrow digger",
+  "a feathered thornback",
+  "a tusked bog wallower",
+  "a silent ash-grey stag",
+  "a sleek river weasel the size of a pony",
+  "a many-jointed cave strider",
+  "a bristling fen boar",
+  "a hollow-eyed scarecrow walker",
+  "a pale salt crawler",
+  "a furred bat the size of a door",
+  "a coiling vine serpent",
+]

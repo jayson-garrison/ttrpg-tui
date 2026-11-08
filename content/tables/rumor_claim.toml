@@ -1,0 +1,28 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: clause, lowercase, no final period; read after 'say'.
+name = "Rumor claim"
+category = "Adventure"
+tags = ["rumor", "claim"]
+description = "What the rumor says."
+items = [
+  "the old mill wheel turns by itself after dark",
+  "a merchant caravan vanished on the north road",
+  "the bridge keeper is not who he claims to be",
+  "a spring in the hills runs warm all winter",
+  "lights have been seen under the abandoned chapel",
+  "someone is buying up every lantern in town",
+  "the river has started running a little backwards",
+  "a buried strongbox lies under a crooked oak",
+  "the new tax is a cover for something worse",
+  "wolves are avoiding the eastern fields",
+  "a stranger pays well for bad news",
+  "the hermit on the ridge has not eaten in years",
+  "something large has been digging near the quarry",
+  "the mayor's spouse writes to a rival town",
+  "a bell rings in the marsh with no tower near",
+  "the well at the crossroads gives wrong reflections",
+  "a gang is stealing salt, not coin",
+  "there is a second, older road under the market",
+  "an heir to the empty manor has been found",
+  "the fog this season keeps its shape",
+]

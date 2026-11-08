@@ -8,6 +8,30 @@ use crate::catalog::Source;
 /// `(file stem, file text)` for each built-in table.
 pub const TABLES: &[(&str, &str)] = &[
     (
+        "creature_ability",
+        include_str!("../../../content/tables/creature_ability.toml"),
+    ),
+    (
+        "creature_behavior",
+        include_str!("../../../content/tables/creature_behavior.toml"),
+    ),
+    (
+        "creature_form",
+        include_str!("../../../content/tables/creature_form.toml"),
+    ),
+    (
+        "creature_lair",
+        include_str!("../../../content/tables/creature_lair.toml"),
+    ),
+    (
+        "creature_trait",
+        include_str!("../../../content/tables/creature_trait.toml"),
+    ),
+    (
+        "creature_weakness",
+        include_str!("../../../content/tables/creature_weakness.toml"),
+    ),
+    (
         "event_focus",
         include_str!("../../../content/tables/event_focus.toml"),
     ),
@@ -51,15 +75,59 @@ pub const TABLES: &[(&str, &str)] = &[
         "npc_trait",
         include_str!("../../../content/tables/npc_trait.toml"),
     ),
+    (
+        "rumor_claim",
+        include_str!("../../../content/tables/rumor_claim.toml"),
+    ),
+    (
+        "rumor_source",
+        include_str!("../../../content/tables/rumor_source.toml"),
+    ),
+    (
+        "rumor_veracity",
+        include_str!("../../../content/tables/rumor_veracity.toml"),
+    ),
+    (
+        "trap_effect",
+        include_str!("../../../content/tables/trap_effect.toml"),
+    ),
+    (
+        "trap_mechanism",
+        include_str!("../../../content/tables/trap_mechanism.toml"),
+    ),
+    (
+        "trap_severity",
+        include_str!("../../../content/tables/trap_severity.toml"),
+    ),
+    (
+        "trap_sign",
+        include_str!("../../../content/tables/trap_sign.toml"),
+    ),
+    (
+        "trap_trigger",
+        include_str!("../../../content/tables/trap_trigger.toml"),
+    ),
 ];
 
 /// `(file stem, file text)` for each built-in generator.
 pub const GENERATORS: &[(&str, &str)] = &[
     (
+        "creature",
+        include_str!("../../../content/generators/creature.toml"),
+    ),
+    (
         "event",
         include_str!("../../../content/generators/event.toml"),
     ),
     ("npc", include_str!("../../../content/generators/npc.toml")),
+    (
+        "rumor",
+        include_str!("../../../content/generators/rumor.toml"),
+    ),
+    (
+        "trap",
+        include_str!("../../../content/generators/trap.toml"),
+    ),
 ];
 
 /// All built-in sources, sorted by file stem within each kind (tables first).
