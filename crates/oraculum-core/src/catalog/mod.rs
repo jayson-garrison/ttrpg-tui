@@ -82,6 +82,8 @@ pub struct LoadWarning {
     pub item: Option<(ItemKind, String)>,
     pub kind: WarningKind,
     pub message: String,
+    /// True when a user item was dropped and the built-in it replaced is back in use.
+    pub kept_builtin: bool,
 }
 
 #[derive(Debug, Default)]

@@ -477,3 +477,13 @@ fn arbitrary_toml_never_panics() {
         }
     }
 }
+
+#[test]
+fn toml_errors_are_a_single_line_with_the_line_number() {
+    let e = err("name = \"T\"\nthis is [ not toml");
+    let TableError::Toml(msg) = &e else {
+        panic!("{e:?}")
+    };
+    assert!(!msg.contains('\n'), "{msg:?}");
+    assert!(msg.starts_with("line 2: "), "{msg:?}");
+}

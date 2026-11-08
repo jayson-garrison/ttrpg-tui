@@ -101,17 +101,19 @@ fn remove(
     let Some(top) = stack.last() else {
         return;
     };
-    warnings.push(LoadWarning {
-        origin: top.origin.clone(),
-        item: Some(key.clone()),
-        kind,
-        message,
-    });
+    let origin = top.origin.clone();
     if top.user {
         stack.retain(|c| !c.user);
     } else {
         stack.clear();
     }
+    warnings.push(LoadWarning {
+        origin,
+        item: Some(key.clone()),
+        kind,
+        message,
+        kept_builtin: !stack.is_empty(),
+    });
     if stack.is_empty() {
         layers.remove(key);
     }

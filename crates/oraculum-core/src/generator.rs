@@ -141,8 +141,8 @@ impl Generator {
         src: &str,
         default_id: &str,
     ) -> Result<(Generator, Vec<GeneratorWarning>), GeneratorError> {
-        let raw: RawGenerator =
-            toml::from_str(src).map_err(|e| GeneratorError::Toml(e.to_string()))?;
+        let raw: RawGenerator = toml::from_str(src)
+            .map_err(|e| GeneratorError::Toml(crate::table::toml_message(src, &e)))?;
         let id = raw.id.unwrap_or_else(|| default_id.to_string());
         if !is_valid_item_id(&id) {
             return Err(GeneratorError::BadId(id));
