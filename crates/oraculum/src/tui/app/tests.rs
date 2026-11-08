@@ -551,3 +551,18 @@ fn same_script_gives_the_same_dice_output() {
     };
     assert_eq!(run(), run());
 }
+
+#[test]
+fn resize_down_and_back_up_redraws_without_panic() {
+    let mut f = fixture(&[], 1);
+    for (w, h) in [(200, 60), (59, 19), (60, 20), (80, 24), (30, 10), (200, 60)] {
+        let text = screen(&f.app, w, h);
+        assert_eq!(text.contains("too small"), w < 60 || h < 20, "{w}x{h}");
+    }
+    f.app.handle_key(ch('?'));
+    let _ = screen(&f.app, 59, 19);
+    assert!(
+        screen(&f.app, 80, 24).contains("Help"),
+        "help survives a resize"
+    );
+}
