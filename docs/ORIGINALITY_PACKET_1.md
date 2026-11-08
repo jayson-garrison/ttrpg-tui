@@ -57,9 +57,11 @@ Rendered samples are pinned in `crates/oraculum-core/tests/snapshots/` (seeds 1-
 | #15 T6.2 | names, `npc_*`, `npc` | yes, approved after fixes | pending |
 | #16 T6.3 | `rumor_*`, `trap_*`, `creature_*` | yes, approved | pending |
 
-## Decisions needed from you
+## Decisions (answered by the human, card HAG-4, 2026-11-08)
+
+Both answered: keep the spec-dictated oracle ids; nothing else flagged as familiar. Original questions kept for the record.
 
 1. Accept the spec-dictated oracle table ids/names (`event_focus`, `meaning_action`, `meaning_subject`)? If not, say what to rename (needs a spec change).
 2. Anything else that feels familiar: list it here and QA adds it to the denylist so it cannot come back.
 
-Sign-off line (T6.8, not now): `content/PROVENANCE.md` > Human sign-off.
+Batch 1 accepted 2026-11-08; recorded in `content/PROVENANCE.md` > Human sign-off by batch. Final release sign-off is at T6.8.

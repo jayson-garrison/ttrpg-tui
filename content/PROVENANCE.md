@@ -9,6 +9,16 @@ QA (Rick) records "reviewed" per PR below. The human sign-off line at the end is
 | T6.2 | `given_names`, `family_names`, `npc_*` (6), `npc` | Rick (QA), PR #15 | Read all 8 tables and 20 samples; `Eskel` (published-fiction name) replaced, `Underhill` swapped for `Underbank` (flagged for the human); both added to the denylist |
 | T6.3 | `rumor` (+3), `trap` (+5), `creature` (+6) | Rick (QA), PR #16 | Read all 14 tables and samples; no issues. Early-packet checkpoint (D-65) |
 
-## Human sign-off
+## Human sign-off by batch
+
+Packets are in `docs/ORIGINALITY_PACKET_*.md`. The human's answers are recorded here by QA.
+
+| Batch | Content | Packet | Human sign-off |
+|---|---|---|---|
+| 1 | T6.1-T6.3: oracle tables, names, npc, rumor, trap, creature | `ORIGINALITY_PACKET_1.md` | Accepted 2026-11-08 (card HAG-4): spec-dictated oracle ids `event_focus`, `meaning_action`, `meaning_subject` kept; nothing else flagged as familiar |
+| 2 | T6.4-T6.6 (after T6.5/T6.6) | pending | pending |
+| 3 | T6.7-T6.8 (final) | pending | pending |
+
+## Final release sign-off
 
 Reviewer: _pending_ | Date: _pending_ | Commit: _pending_
