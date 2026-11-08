@@ -17,10 +17,10 @@ QA read every entry of all 25 tables and 6 rendered samples per generator. Findi
 
 | Item | Finding | Action |
 |---|---|---|
-| `given_names` entry **Eskel** | Name of a character in a published fiction series | Must be replaced (PR #15 changes requested) |
-| `family_names` entry **Underhill** | Ordinary English surname, but also a famous fantasy hero's alias | Recommend replace; **your call** |
+| `given_names` entry **Eskel** | Name of a character in a published fiction series | **Fixed** in PR #15 (now Eskarn); also swapped Perrin, Garrow, Lenore, Umber, Marlow for coined variants; all six added to the denylist |
+| `family_names` entry **Underhill** | Ordinary English surname, but also a famous fantasy hero's alias | **Fixed** in PR #15 (now Underbank) |
 | Table ids `event_focus`, `meaning_action`, `meaning_subject` | Ids are fixed by the spec and resemble terms used by published oracle products. Entries share nothing beyond common English words | **Your call**: accept spec naming? |
-| Spelling mixed (British and American) | Style only | Stack to unify |
+| Spelling mixed (British and American) | Style only | Fixed: American throughout |
 | Everything else | No proprietary names, no real-world references, no wording matching known published tables that QA could identify | none |
 
 Honest limit: QA recognises well-known products from memory; it cannot search every published table. A short entry such as "a hidden danger surfaces" is generic enough that any similarity to a published line would be coincidence, and cannot be ruled out by a machine.
@@ -54,13 +54,12 @@ Rendered samples are pinned in `crates/oraculum-core/tests/snapshots/` (seeds 1-
 | PR | Content | QA reviewed | Human sign-off |
 |---|---|---|---|
 | #14 T6.1 | `event_focus`, `meaning_*`, `event` | yes (PR #14) | pending |
-| #15 T6.2 | names, `npc_*`, `npc` | yes, changes requested (Eskel) | pending |
+| #15 T6.2 | names, `npc_*`, `npc` | yes, approved after fixes | pending |
 | #16 T6.3 | `rumor_*`, `trap_*`, `creature_*` | yes, approved | pending |
 
 ## Decisions needed from you
 
 1. Accept the spec-dictated oracle table ids/names (`event_focus`, `meaning_action`, `meaning_subject`)? If not, say what to rename (needs a spec change).
-2. Replace `Underhill`? (QA recommends yes.)
-3. Anything else that feels familiar: list it here and QA adds it to the denylist so it cannot come back.
+2. Anything else that feels familiar: list it here and QA adds it to the denylist so it cannot come back.
 
 Sign-off line (T6.8, not now): `content/PROVENANCE.md` > Human sign-off.
