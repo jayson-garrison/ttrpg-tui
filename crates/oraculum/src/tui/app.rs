@@ -9,6 +9,7 @@ use ratatui::Frame;
 
 use super::action::{Action, AppInfo, RollRequest, Tab, TabEvent, TabId, Toast};
 use super::tabs::dice::DiceTab;
+use super::tabs::oracle::OracleTab;
 use super::tabs::placeholder::PlaceholderTab;
 use super::widgets::{help, status_line, tab_bar, too_small};
 use crate::storage::JournalStore;
@@ -31,7 +32,7 @@ impl App {
     /// The shipped app. Oracle, Library and Journal are placeholders until T8 and T9.
     pub fn new(info: AppInfo, engine: Engine, store: JournalStore, clock: Box<dyn Clock>) -> App {
         let tabs: Vec<Box<dyn Tab>> = vec![
-            Box::new(PlaceholderTab::new(TabId::Oracle, "Oracle")),
+            Box::new(OracleTab::new()),
             Box::new(PlaceholderTab::new(TabId::Library, "Library")),
             Box::new(DiceTab::new()),
             Box::new(PlaceholderTab::new(TabId::Journal, "Journal")),
@@ -181,10 +182,11 @@ impl App {
             }
             Action::Toast(t) => self.show_toast(t),
             Action::Roll(request) => self.roll(request),
-            // Notes, export and Library jumps arrive with T8 and T9.
-            Action::AppendNote(_) | Action::ExportJournal | Action::OpenInLibrary(_) => {
+            // Notes and export arrive with T8.2, Library jumps with T9.1.
+            Action::AppendNote(_) | Action::ExportJournal => {
                 self.show_toast(Toast::info("not available yet"))
             }
+            Action::OpenInLibrary(_) => self.show_toast(Toast::info("Library not available yet")),
         }
         true
     }

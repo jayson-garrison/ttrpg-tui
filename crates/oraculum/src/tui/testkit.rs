@@ -85,3 +85,14 @@ pub fn store() -> (JournalStore, tempfile::TempDir) {
         dir,
     )
 }
+
+/// An engine over an empty catalog (no `event` generator, so twists are
+/// unavailable).
+pub fn empty_engine(script: &[u32]) -> Engine {
+    let (catalog, _) = Catalog::build(&[], &[]);
+    Engine::new(
+        Rc::new(catalog),
+        Box::new(ScriptedRoller::new(script.iter().copied())),
+        Box::new(FixedClock(1_700_000_000)),
+    )
+}
