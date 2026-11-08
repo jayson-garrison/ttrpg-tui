@@ -4,3 +4,4 @@ pub mod cli;
 pub mod clock;
 pub mod error;
 pub mod storage;
+pub mod tui;

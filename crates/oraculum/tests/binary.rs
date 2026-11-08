@@ -95,11 +95,11 @@ fn help_and_version_succeed() {
 }
 
 #[test]
-fn running_without_a_subcommand_explains_and_exits_2() {
+fn running_without_a_terminal_explains_and_exits_2() {
     let dir = tempdir().unwrap();
     let (code, _, err) = finish(with_args(dir.path(), &[]));
     assert_eq!(code, 2);
-    assert!(err.contains("interactive interface"), "{err}");
+    assert!(err.contains("needs a terminal"), "{err}");
 }
 
 #[test]
