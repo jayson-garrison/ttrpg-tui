@@ -829,13 +829,13 @@ For Stack (developer) and Rick (QA). Take one task at a time, in order; each end
 **T4 Generators and catalog (4 d).** `Generator`, slots, segments, slot re-roll, `Catalog::build` pipeline, `Filter` (§3.7-3.8).
 - Rick: scripted tests prove `count`, `distinct`, `join`, `list`, `chance` (both outcomes), nested generators; re-rolling one slot leaves all other slots identical; a user file that creates a cycle or dangling reference is dropped with a warning and the built-in survives (D-21); library order is stable across runs.
 
-**T5 Journal, storage, Engine, CLI (4 d).** JSONL codec, markdown export, data dir, `JournalStore`, `Engine`, all spec §8 subcommands (§3.9-3.10, §5.1-5.3).
+**T5 Journal, storage, Engine, CLI (4 d). End of T5 is tagged `v0.1.0-pre` (D-64).** JSONL codec, markdown export, data dir, `JournalStore`, `Engine`, all spec §8 subcommands (§3.9-3.10, §5.1-5.3).
 - Rick: with `--seed 7 --data-dir <tmp>` each of `roll`, `ask`, `table`, `gen`, `list`, `export` prints what the journal stores in `result`; running the same command twice gives identical stdout (D-30); exit codes 0/1/2 as in §5.1; `--session ../x` exits 2; a truncated last journal line is skipped, reported, and the next append starts on a new line; export matches the snapshot. First usable headless build.
 
-**T6 Built-in content (5 d, can overlap T7-T9).** 15 generators and about 69 tables with provenance headers (§7).
-- Rick: zero load warnings; every generator renders for seeds 0..500 with no empty value and no `{` or `}`; list tables have at least 12 items; the 15 required generators exist; Rick assembles the originality review packet for the human (D-46). Release gate: the human's sign-off is recorded in `content/PROVENANCE.md`.
+**T6 Built-in content (5 d). Starts as soon as T4 freezes the file formats, in parallel with T5 and T7-T9 (D-63).** 15 generators and about 69 tables with provenance headers (§7).
+- Rick: after the first five generators exist, prepares an early originality review packet for the human (D-46, D-65). Then: zero load warnings; every generator renders for seeds 0..500 with no empty value and no `{` or `}`; list tables have at least 12 items; the 15 required generators exist; Rick assembles the originality review packet for the human (D-46). Release gate: the human's sign-off is recorded in `content/PROVENANCE.md`.
 
-**T7 TUI shell and Dice tab (3 d).** `TerminalGuard`, event loop, `App`, `Action`/`TabEvent`, tab bar, help overlay, toast, `LineInput`, Dice tab (§5.4).
+**T7 TUI shell and Dice tab (3 d). TUI order is fixed: T7 Dice, T8 Oracle+Journal, T9 Library (D-66).** `TerminalGuard`, event loop, `App`, `Action`/`TabEvent`, tab bar, help overlay, toast, `LineInput`, Dice tab (§5.4).
 - Rick: `1`-`4` and Tab switch tabs; `?` shows help; `q` quits only when no text field is focused; `Ctrl-C` while typing cancels the edit, a second quits; invalid dice input shows an inline error and is not journaled; the terminal is restored on quit and after a forced panic (local patch) in macOS Terminal and a Linux terminal; under 60x20 shows "terminal too small".
 
 **T8 Oracle and Journal tabs (3 d).** Both tabs, live journal feed, notes, export key.
