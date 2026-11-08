@@ -1,0 +1,32 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: multi-line template; the twist sits alone on its labelled last line (D-76).
+name = "Encounter"
+category = "Adventure"
+tags = ["encounter", "adventure"]
+description = "A wilderness encounter: terrain, how many, what they are doing, how they react, and sometimes a twist."
+template = "Terrain: {terrain}. Number: {number}.\nCreature: {creature}, {activity}.\nDisposition: {disposition}.\nTwist: {twist}"
+
+[[slots]]
+key = "terrain"
+table = "terrain"
+
+[[slots]]
+key = "number"
+dice = "1d6"
+
+[[slots]]
+key = "creature"
+table = "creature_form"
+
+[[slots]]
+key = "activity"
+table = "encounter_activity"
+
+[[slots]]
+key = "disposition"
+table = "encounter_disposition"
+
+[[slots]]
+key = "twist"
+generator = "event"
+chance = 25

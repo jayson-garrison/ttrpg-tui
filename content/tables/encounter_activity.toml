@@ -1,0 +1,20 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: participle phrase, lowercase.
+name = "Encounter activity"
+category = "Adventure"
+tags = ["encounter", "activity"]
+description = "What the creatures are doing when met."
+items = [
+  "feeding on a carcass",
+  "crossing the open ground",
+  "guarding a narrow path",
+  "resting after a hunt",
+  "tracking something else",
+  "digging at the roadside",
+  "playing in the shallows",
+  "dragging a heavy load",
+  "arguing among themselves",
+  "setting up camp",
+  "fleeing from something unseen",
+  "sniffing along a trail",
+]

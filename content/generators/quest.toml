@@ -1,0 +1,39 @@
+# Written for Oraculum. Original: not copied or adapted from any published table,
+# game, oracle or setting. Author: Stack (Claude, AI developer agent). Form: multi-line template, all slots mandatory.
+name = "Quest"
+category = "Adventure"
+tags = ["quest", "adventure"]
+description = "A job: what to do, for whom, where, what goes wrong, and what is at stake."
+template = "Quest: {goal} {target}, for {patron}.\nLocation: {adjective} {noun}\nComplication: {complication}.\nReward: {reward}. If it fails: {stakes}."
+
+[[slots]]
+key = "goal"
+table = "quest_goal"
+
+[[slots]]
+key = "target"
+table = "quest_target"
+
+[[slots]]
+key = "patron"
+table = "quest_patron"
+
+[[slots]]
+key = "adjective"
+table = "place_adjective"
+
+[[slots]]
+key = "noun"
+table = "place_noun"
+
+[[slots]]
+key = "complication"
+table = "quest_complication"
+
+[[slots]]
+key = "reward"
+table = "quest_reward"
+
+[[slots]]
+key = "stakes"
+table = "quest_stakes"

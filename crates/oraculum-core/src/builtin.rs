@@ -36,6 +36,14 @@ pub const TABLES: &[(&str, &str)] = &[
         include_str!("../../../content/tables/creature_weakness.toml"),
     ),
     (
+        "encounter_activity",
+        include_str!("../../../content/tables/encounter_activity.toml"),
+    ),
+    (
+        "encounter_disposition",
+        include_str!("../../../content/tables/encounter_disposition.toml"),
+    ),
+    (
         "event_focus",
         include_str!("../../../content/tables/event_focus.toml"),
     ),
@@ -86,6 +94,30 @@ pub const TABLES: &[(&str, &str)] = &[
     (
         "place_noun",
         include_str!("../../../content/tables/place_noun.toml"),
+    ),
+    (
+        "quest_complication",
+        include_str!("../../../content/tables/quest_complication.toml"),
+    ),
+    (
+        "quest_goal",
+        include_str!("../../../content/tables/quest_goal.toml"),
+    ),
+    (
+        "quest_patron",
+        include_str!("../../../content/tables/quest_patron.toml"),
+    ),
+    (
+        "quest_reward",
+        include_str!("../../../content/tables/quest_reward.toml"),
+    ),
+    (
+        "quest_stakes",
+        include_str!("../../../content/tables/quest_stakes.toml"),
+    ),
+    (
+        "quest_target",
+        include_str!("../../../content/tables/quest_target.toml"),
     ),
     (
         "rumor_claim",
@@ -176,10 +208,18 @@ pub const GENERATORS: &[(&str, &str)] = &[
         include_str!("../../../content/generators/creature.toml"),
     ),
     (
+        "encounter",
+        include_str!("../../../content/generators/encounter.toml"),
+    ),
+    (
         "event",
         include_str!("../../../content/generators/event.toml"),
     ),
     ("npc", include_str!("../../../content/generators/npc.toml")),
+    (
+        "quest",
+        include_str!("../../../content/generators/quest.toml"),
+    ),
     (
         "rumor",
         include_str!("../../../content/generators/rumor.toml"),
