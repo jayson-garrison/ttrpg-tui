@@ -168,6 +168,7 @@ Whole set:
 5. No orphan table, and no table referenced by only a later PR's generator.
 6. Insta snapshot per generator for seeds 1..3 (D-72); this is also Rick's review material.
 7. `required_generators_exist` (15) and `required_tables_exist` (69) are `#[ignore = "enabled in T6.8"]` until the final PR, so partial PRs stay green.
+8. Denylist negative test: a unit test feeds the lint a table containing a denylisted term (and one with a non-ASCII character and one with `{`) and asserts the lint rejects each, so a broken or empty `denylist.txt` cannot pass silently; it also asserts the denylist file is non-empty.
 
 Rick's checks per PR (manual, in the PR): read 20 rendered samples per new generator (`oraculum gen <id> --seed N` once T5 exists, else the snapshots); check grammar, tone, and that nothing resembles a published product; record "reviewed" with PR number in `content/PROVENANCE.md`.
 
