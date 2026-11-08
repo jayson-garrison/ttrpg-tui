@@ -238,8 +238,13 @@ impl Table {
                     text.push_str(&r.text);
                     refs.push(ResolvedRef::Table(Box::new(r)));
                 }
-                // Not producible in the table-entry context.
-                Segment::Slot(_) => {}
+                // Parsing rejects slots in table entries; if one ever got here,
+                // show it as written rather than dropping it silently.
+                Segment::Slot(key) => {
+                    text.push('{');
+                    text.push_str(key);
+                    text.push('}');
+                }
             }
         }
         Ok(TableRoll {
