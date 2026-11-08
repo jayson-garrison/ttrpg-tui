@@ -144,7 +144,7 @@ impl Tab for DiceTab {
     }
 
     fn help(&self) -> &'static [(&'static str, &'static str)] {
-        &[("Enter", "roll"), ("Esc", "leave input"), ("/", "edit")]
+        &[("Enter", "roll"), ("Esc", "leave input"), ("/ i", "edit")]
     }
 }
 

@@ -736,3 +736,113 @@ fn app_reroll_slot_changes_only_that_slot_and_is_journaled_with_the_slot_key() {
     assert_eq!(text.lines().count(), 2);
     assert!(text.contains("pair [slot a]"), "{text}");
 }
+
+// ---- T9.3: hardening ----
+
+/// Keys each tab accepts, from the plan (independent of `help()`).
+fn accepted_keys(id: TabId) -> &'static [&'static str] {
+    match id {
+        TabId::Oracle => &["\u{2190}/\u{2192}", "h/l", "/", "Enter", "Esc", "t"],
+        TabId::Library => &[
+            "/",
+            "c",
+            "Enter",
+            "r",
+            "s",
+            "v",
+            "w",
+            "\u{2191}/\u{2193}",
+            "PgUp",
+            "Home",
+            "Esc",
+        ],
+        TabId::Dice => &["Enter", "Esc", "/", "i"],
+        TabId::Journal => &["n", "x", "\u{2191}/\u{2193}", "PgUp", "Home", "End"],
+    }
+}
+
+#[test]
+fn help_lists_every_key_the_tab_accepts_and_fits_at_60x20() {
+    let (mut app, _path, _keep) = oracle_app(&[], true);
+    for id in TabId::ALL {
+        app.handle_key(key(KeyCode::Esc));
+        while app.active() != Some(id) {
+            app.handle_key(key(KeyCode::Tab));
+        }
+        let keys: Vec<&str> = app.tabs[app.active]
+            .help()
+            .iter()
+            .map(|(k, _)| *k)
+            .collect();
+        let joined = keys.join(" ");
+        for k in accepted_keys(id) {
+            assert!(joined.contains(k), "{id:?}: help lacks {k:?} in {joined:?}");
+        }
+        app.handle_key(key(KeyCode::Esc));
+        app.handle_key(ch('?'));
+        let s = screen(&app, 60, 20);
+        assert!(s.contains("Press any key to close"), "{id:?}\n{s}");
+        for (k, _) in app.tabs[app.active].help() {
+            assert!(s.contains(k), "{id:?}: overlay lacks {k:?}\n{s}");
+        }
+        app.handle_key(ch('x')); // any key closes it
+    }
+}
+
+/// Put every tab into a busy state: results, picker, warnings, notes.
+fn busy_app() -> (App, [tempfile::TempDir; 2]) {
+    let (mut app, _path, keep) = oracle_app(&[22, 2, 1, 2, 3, 4, 5, 6, 3, 4, 5, 6, 7, 8], true);
+    app.handle_key(key(KeyCode::Enter)); // oracle (twist)
+    app.handle_key(ch('2'));
+    app.handle_key(ch('/'));
+    type_and_enter(&mut app, "pair");
+    app.handle_key(key(KeyCode::Enter));
+    app.handle_key(ch('s'));
+    app.handle_key(key(KeyCode::Esc));
+    app.handle_key(ch('w'));
+    app.handle_key(ch('3'));
+    type_and_enter(&mut app, "2d6");
+    app.handle_key(key(KeyCode::Esc));
+    app.handle_key(ch('4'));
+    app.handle_key(ch('n'));
+    type_and_enter(&mut app, "a note");
+    (app, keep)
+}
+
+#[test]
+fn render_all_tabs_at_60x20_80x24_200x60_do_not_panic() {
+    let (mut app, _keep) = busy_app();
+    for tab in ['1', '2', '3', '4'] {
+        app.handle_key(key(KeyCode::Esc));
+        app.handle_key(ch(tab));
+        for (w, h) in [(60, 20), (80, 24), (200, 60)] {
+            let s = screen(&app, w, h);
+            assert!(!s.contains("too small"), "{tab} {w}x{h}");
+        }
+    }
+}
+
+#[test]
+fn every_tab_survives_a_resize_from_200x60_down_to_59x19_and_back() {
+    let (mut app, _keep) = busy_app();
+    for tab in ['1', '2', '3', '4'] {
+        app.handle_key(key(KeyCode::Esc));
+        app.handle_key(ch(tab));
+        for (w, h) in [
+            (200, 60),
+            (80, 24),
+            (60, 20),
+            (59, 19),
+            (30, 10),
+            (1, 1),
+            (60, 20),
+            (200, 60),
+        ] {
+            let s = screen(&app, w, h);
+            if w >= 30 {
+                // Narrower than the message itself cannot show it; only no-panic applies.
+                assert_eq!(s.contains("too small"), w < 60 || h < 20, "{tab} {w}x{h}");
+            }
+        }
+    }
+}

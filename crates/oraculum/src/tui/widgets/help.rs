@@ -14,13 +14,22 @@ const GLOBAL: &[(&str, &str)] = &[
 
 /// A centered modal listing the global keys and the active tab's keys.
 pub fn render(frame: &mut Frame, area: Rect, tab_title: &str, tab_keys: &[(&str, &str)]) {
+    // Blank separators only when the whole list still fits the area.
+    let rows = 1 + GLOBAL.len() + 1 + tab_keys.len().max(1) + 1;
+    let room = usize::from(area.height.saturating_sub(2));
+    let gap = rows + 2 <= room;
+    let blank = |lines: &mut Vec<Line>| {
+        if gap {
+            lines.push(Line::from(""));
+        }
+    };
     let mut lines = vec![Line::styled("Global", theme::bold())];
     lines.extend(
         GLOBAL
             .iter()
             .map(|(k, d)| Line::from(format!("  {k:<16}{d}"))),
     );
-    lines.push(Line::from(""));
+    blank(&mut lines);
     lines.push(Line::styled(tab_title.to_string(), theme::bold()));
     if tab_keys.is_empty() {
         lines.push(Line::styled("  (no keys yet)", theme::dim()));
@@ -30,7 +39,7 @@ pub fn render(frame: &mut Frame, area: Rect, tab_title: &str, tab_keys: &[(&str,
             .iter()
             .map(|(k, d)| Line::from(format!("  {k:<16}{d}"))),
     );
-    lines.push(Line::from(""));
+    blank(&mut lines);
     lines.push(Line::styled("Press any key to close", theme::dim()));
 
     let width = area.width.min(64);

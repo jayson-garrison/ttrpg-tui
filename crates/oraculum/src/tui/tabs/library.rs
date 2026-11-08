@@ -641,11 +641,13 @@ impl Tab for LibraryTab {
         &[
             ("/", "filter"),
             ("c", "category"),
-            ("Enter", "roll"),
-            ("r", "repeat"),
-            ("v", "entries"),
-            ("s", "slot"),
+            ("Enter / r", "roll / repeat"),
+            ("s", "slot picker"),
+            ("v", "entries (tables)"),
             ("w", "warnings"),
+            ("\u{2191}/\u{2193} PgUp/PgDn", "move"),
+            ("Home/End", "first / last"),
+            ("Esc", "clear filter"),
         ]
     }
 }
